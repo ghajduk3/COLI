@@ -1,0 +1,36 @@
+Link to publication: https://arxiv.org/abs/1909.04251
+Link to data: https://github.com/jing-qian/A-Benchmark-Dataset-for-Learning-to-Intervene-in-Online-Hate-Speech
+Task description: Binary (hateful/not)
+Details of task: Hate per se
+Size of dataset: 22,324
+Percentage abusive: 0.24
+Language: English
+Level of annotation: Posts (with context of the converstaional thread taken into account)
+Platform: Reddit
+Medium: Text
+Reference: Qian, J., Bethke, A., Belding, E. and Yang Wang, W., 2019. A Benchmark Dataset for Learning to Intervene in Online Hate Speech. ArXiv,.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
