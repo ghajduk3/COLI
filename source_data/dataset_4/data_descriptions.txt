@@ -1,0 +1,11 @@
+Link to publication: https://arxiv.org/pdf/1703.04009.pdf
+Link to data: https://github.com/t-davidson/hate-speech-and-offensive-language
+Task description: Hierarchy (Hate, Offensive, Neither)
+Details of task: Hate per se
+Size of dataset: 24,802
+Percentage abusive: 0.06
+Language: English
+Level of annotation: Posts
+Platform: Twitter
+Medium: Text
+Reference: Davidson, T., Warmsley, D., Macy, M. and Weber, I., 2017. Automated Hate Speech Detection and the Problem of Offensive Language. ArXiv,.
