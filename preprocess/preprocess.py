@@ -47,6 +47,7 @@ def preprocessing(text,stem=0):
     words = word_tokenize(text)
     tokens = []
 
+
     stemmer = stemmers[stem]
 
     # remove stopwords and words with length 1
@@ -54,11 +55,12 @@ def preprocessing(text,stem=0):
         if word not in stopwords:
             if len(word) > 1:
                 # apply stemmer to single word
-                word = stemmer.stem(word)
+                # word = stemmer.stem(word)
                 tokens.append(word)
 
     # convert tokens back to text
     preprocessed_text = ' '.join([str(element) for element in tokens])
+    print(preprocessed_text)
 
     return preprocessed_text
 

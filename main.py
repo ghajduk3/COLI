@@ -4,6 +4,7 @@ import re,math
 import pandas as pd
 from iteration_utilities import deepflatten
 from pandas.core.common import flatten
+from sklearn.metrics import classification_report
 logger = logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
 from utils import pipeline
@@ -27,7 +28,14 @@ if __name__ == '__main__':
     # print(comments[:5])
     ds = pipeline.load_labeled_datasets()
     x,y = pipeline.run_dataset_preparation(ds)
-
+    # print(x)
+    model,vectorizer,x_test,y_true = pipeline.train_and_split('SVM','tfidf',x,y)
+    print(x)
+    print(x_test)
+    x_test = vectorizer.transform(x_test['preprocessed'].values)
+    y_test = model.predict(x_test)
+    print(y_test,y_true)
+    print(classification_report(y_true,y_test))
 
 
 
