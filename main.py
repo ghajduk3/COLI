@@ -1,41 +1,29 @@
-import logging,sys
-from preprocess import preparator
-import re,math
-import pandas as pd
-from iteration_utilities import deepflatten
-from pandas.core.common import flatten
-from sklearn.metrics import classification_report
+import logging
+
 logger = logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
-from utils import pipeline
+from utils import pipeline,classifier_manage
 
-def transform_text(text,indexes):
-    indexes = eval(indexes) if isinstance(indexes,str) else []
-    comment_by_idx = []
-    for index,comment in enumerate(re.split('\d.\s+',text)[1:]):
-        if indexes and index+1 in indexes:
-            comment_by_idx.append([comment,1])
-        else:
-            comment_by_idx.append([comment,0])
-    return comment_by_idx
+# def transform_text(text,indexes):
+#     indexes = eval(indexes) if isinstance(indexes,str) else []
+#     comment_by_idx = []
+#     for index,comment in enumerate(re.split('\d.\s+',text)[1:]):
+#         if indexes and index+1 in indexes:
+#             comment_by_idx.append([comment,1])
+#         else:
+#             comment_by_idx.append([comment,0])
+#     return comment_by_idx
 
 if __name__ == '__main__':
-    # preparator.Preparator.prepare_all(sys.argv[1])
-    # data = pd.read_csv(sys.argv[1])
-    # data['text'] = data.apply(lambda row: transform_text(row.text,row.hate_speech_idx),axis=1)
-    # comments = [item for sublist in data['text'].tolist() for item in sublist]
-    # print(len(comments))
-    # print(comments[:5])
-    ds = pipeline.load_labeled_datasets()
+    ds = pipeline.load_labeled_datasets(dataset_number=(2,2))
     x,y = pipeline.run_dataset_preparation(ds)
-    # print(x)
-    model,vectorizer,x_test,y_true = pipeline.train_and_split('SVM','tfidf',x,y)
-    print(x)
-    print(x_test)
-    x_test = vectorizer.transform(x_test['preprocessed'].values)
-    y_test = model.predict(x_test)
-    print(y_test,y_true)
-    print(classification_report(y_true,y_test))
+    model,vectorizer,x_test,y_true = pipeline.train_and_split('LOGISTIC REGRESSION','tfidf',x,y)
+    classifier_manage.save_classifier(model,'SVM',vectorizer)
+    y_test = pipeline.transform_and_predict(model,vectorizer,x_test)
 
-
+    # f1,acc = pipeline.evaluate_cross_validation('LOGISTIC REGRESSION','tfidf',x,y)
+    # print(f1,acc)
+    report = pipeline.evaluate(y_true,y_test,target_names = ['no-hate','hate'])
+    print(report)
+    # pipeline.explore()
 

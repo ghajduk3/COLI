@@ -1,13 +1,14 @@
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GridSearchCV
-from .create_features import create_features_tfidf
+import xgboost as xgb
 from .create_features import create_features_vectorizer
+from .create_features import create_features_tfidf
+import pickle
+import os
 
 
-def setup_classifier(x_train: pd.DataFrame, y_train: pd.DataFrame, features="preprocessed", method="count", ngrams=(1, 1)):
+def setup_classifier(x_train, y_train,features="preprocessed", method="count", ngrams=(1, 1)):
     """
-    Finds out best parameter combination for sklearn implementation of Logistic regression using GridSearch. Returns trained model and vectorizer.
+    Finds out best parameter combination for sklearn implementation of SVM using GridSearch. Returns trained model and vectorizer.
     Arguments
     ----------
     x_train  	        pd.DataFrame
@@ -43,15 +44,6 @@ def setup_classifier(x_train: pd.DataFrame, y_train: pd.DataFrame, features="pre
         print("Method has to be either count or tfidf")
         return 1
 
-
-    LRparam_grid = {
-        'C': [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        'penalty': ['l1', 'l2'],
-        'max_iter': list(range(100, 800, 100)),
-        'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
-    }
-    LR = GridSearchCV(LogisticRegression(), param_grid=LRparam_grid, refit=True, verbose=3)
-    LR = LogisticRegression(max_iter=1000, class_weight="balanced")
-    model = LR.fit(x_train, y_train.values.ravel())
+    xgboost_classifier = xgb.XGBClassifier(random_state=42)
+    model = xgboost_classifier.fit(x_train, y_train.values.ravel())
     return model, vec
-
