@@ -10,15 +10,15 @@ def balance_data(x:pd.DataFrame, y:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFram
     there are hate speech tweets.
     Arguments
     ----------
-    x:                      pd.DataFrame
+    x                       pd.DataFrame
                             The dataframe containing all x values
-    y:		                pd.DataFrame
+    y 		                pd.DataFrame
                             The dataframe containing all y values -> hate_speech, shape (n, 1).
     Returns
     ----------
-    x_balanced_shuffled:    pd.DataFrame
+    x_balanced_shuffled     pd.DataFrame
                             The dataframe containing balanced x values..
-    y_balanced_shuffled:	pd.DataFrame
+    y_balanced_shuffled	    pd.DataFrame
                             The dataframe containing balanced y class label values.
     """
 
@@ -45,13 +45,13 @@ def split_dataset(x:pd.DataFrame,y:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFram
     Split input data set into random train and test subsets.
     Arguments
     ----------
-    x:                      pd.DataFrame
+    x                       pd.DataFrame
                             The dataframe containing all x values.
-    y:		                pd.DataFrame
+    y		                pd.DataFrame
                             The dataframe containing all y class labels.
     Returns
     ----------
-    X_train:                pd.DataFrame
+    X_train                 pd.DataFrame
                             The dataframe containing training X data.
 
     X_test                  pd.DataFrame
