@@ -83,9 +83,10 @@ class Preparator(object):
         Label represents binary class [1-Hate speech, 0-Non-hate speech].
         """
         for index,directory in enumerate(reversed(os.listdir(source_data_path))):
-            input_file_path = os.path.join(source_data_path,'dataset_1','data.csv')
-            # eval('Preparator.prepare_dataset_' + str(index+1) + '(input_file_path)')
-            eval('Preparator.prepare_dataset_' + '1' + '(input_file_path)')
+            dataset_name = 'dataset_' + str(index + 1)
+            input_file_path = os.path.join(source_data_path,dataset_name,'data.csv')
+            if os.path.exists(input_file_path):
+                eval('Preparator.prepare_dataset_' + str(index+1) + '(input_file_path)')
 
 
 
