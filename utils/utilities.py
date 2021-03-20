@@ -1,16 +1,22 @@
 import os, csv
 import logging,re
 import rootpath, pandas as pd
+from typing import AnyStr, Tuple, List
 
 logger = logging.getLogger(__name__)
 
 
-def read_file_contents(input_file_path: str, delimiter=",") -> tuple:
+def read_file_contents(input_file_path: AnyStr, delimiter=",") -> Tuple:
     """
-
-    :param file_path:
-    :param delimiter:
-    :return: labels,data
+    Reads content and class labels from  csv file.
+    ----------
+    Parameters
+    input_file_path     AnyStr
+                        Input file path
+    Returns
+    ----------
+    content             Tuple
+                        Class labels and input data.
     """
     try:
         with open(input_file_path,'r') as csv_file:
@@ -26,12 +32,33 @@ def read_file_contents(input_file_path: str, delimiter=",") -> tuple:
     except Exception:
         logger.exception("Unexpected error")
 
-def read_file_contents_pd(input_file_path:str):
+def read_file_contents_pd(input_file_path:AnyStr)->pd.DataFrame:
     """
-    :param input_file_path:
-    :return:
+    Reads content from  csv file.
+    ----------
+    Parameters
+    input_file_path     AnyStr
+                        Input file path
+    Returns
+    ----------
+    content             pd.DataFrame
+                        File contents.
     """
+
     return pd.read_csv(input_file_path)
+
+def write_to_file_pd(content : pd.DataFrame ,output_file_path: AnyStr):
+    """
+    Writes content to csv file.
+    ----------
+    Parameters
+    content             pd.DataFrame
+                        Input data.
+
+    output_file_path    AnyStr
+                        Output file path.
+    """
+    content.to_csv(output_file_path)
 
 def read_file_contents_txt(input_file_path:str):
     try:
@@ -44,12 +71,16 @@ def read_file_contents_txt(input_file_path:str):
     except Exception:
         logger.exception("Unexpected error")
 
-def write_to_file(content,output_file_path:str):
+def write_to_file(content: List, output_file_path:AnyStr):
     """
+    Writes content to csv file.
+    ----------
+    Parameters
+    content             List
+                        Input data.
 
-    :param content:
-    :param output_file_path:
-    :return:
+    output_file_path    AnyStr
+                        Output file path.
     """
     try:
         with open(output_file_path,'w+') as output_file:
@@ -63,14 +94,20 @@ def write_to_file(content,output_file_path:str):
     except Exception:
         logger.exception("Unexpected error")
 
-def split_input_path(input_path:str)->tuple:
+def split_input_path(input_path:AnyStr)->Tuple[AnyStr,AnyStr]:
     '''
     Splits absolute file path to the directory path and the filename.ext.
-            Parameters:
-                    input_path (str): Absolute or relative path.
-            Returns:
-                    dir_name (str): Path to the directory of the file
-                    file_name (str): File name
+    ----------
+    Parameters
+    input_path          AnyStr
+                        Absolute or relative path.
+    --------
+    Returns
+    dir_name            AnyStr
+                        Path to the directory of the file
+
+    file_name           AnyStr
+                        File name.
     '''
     path = os.path.normpath(input_path)
     return (os.path.dirname(path),os.path.basename(path))

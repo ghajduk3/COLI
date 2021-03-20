@@ -15,15 +15,16 @@ def preprocessing(text,stem=0):
     """
     Applies different steps of preprocessing to a text.
     Preprocessing includes:
+    - remove all emoticons
     - remove non-standard lexical tokens (which are not numeric or alphabetical)
     - remove url and @name mentions
     - remove standard stopwords (english stopwords from spacy)
     - convert all letters to lower case
     - perform stemming (PorterStemmer nltk, SnowBallStemmer nltk)
 
-    Parameters
+    Arguments
     ----------
-    text:                   String
+    text:                   AnyStr
                             Text which should be converted by preprocessing
     Returns
     -------
@@ -31,6 +32,21 @@ def preprocessing(text,stem=0):
                             Text which is converted by preprocessing.
     """
     stemmers = [SnowballStemmer("english"), PorterStemmer()]
+    EMOJI_PATTERN = re.compile(
+        "(["
+        "\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        "\U0001F300-\U0001F5FF"  # symbols & pictographs
+        "\U0001F600-\U0001F64F"  # emoticons
+        "\U0001F680-\U0001F6FF"  # transport & map symbols
+        "\U0001F700-\U0001F77F"  # alchemical symbols
+        "\U0001F780-\U0001F7FF"  # Geometric Shapes Extended
+        "\U0001F800-\U0001F8FF"  # Supplemental Arrows-C
+        "\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
+        "\U0001FA00-\U0001FA6F"  # Chess Symbols
+        "\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
+        "])"
+    )
+    text = re.sub(EMOJI_PATTERN,"",text)
     # remove (twitter) urls
     text = re.sub(r"http://t.co/[a-zA-Z0-9]+", "", text)
 
@@ -52,15 +68,13 @@ def preprocessing(text,stem=0):
 
     # remove stopwords and words with length 1
     for word in words:
-        if word not in stopwords:
-            if len(word) > 1:
-                # apply stemmer to single word
-                # word = stemmer.stem(word)
-                tokens.append(word)
+        # if word not in stopwords:
+        if len(word) > 1:
+            # apply stemmer to single word
+            # word = stemmer.stem(word)
+            tokens.append(word)
 
     # convert tokens back to text
     preprocessed_text = ' '.join([str(element) for element in tokens])
-    print(preprocessed_text)
-
     return preprocessed_text
 
