@@ -44,6 +44,6 @@ def setup_classifier(x_train, y_train,features="preprocessed", method="count", n
         print("Method has to be either count or tfidf")
         return 1
 
-    xgboost_classifier = xgb.XGBClassifier(random_state=42)
+    xgboost_classifier = xgb.XGBClassifier(learning_rate = 0.05, n_estimators=300, max_depth=5,random_state=42)
     model = xgboost_classifier.fit(x_train, y_train.values.ravel())
     return model, vec

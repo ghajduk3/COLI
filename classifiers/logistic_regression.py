@@ -45,13 +45,15 @@ def setup_classifier(x_train: pd.DataFrame, y_train: pd.DataFrame, features="pre
 
 
     LRparam_grid = {
-        'C': [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        'penalty': ['l1', 'l2'],
+        'C': [0.001, 0.01, 0.1, 1, 10, 100],
+        'penalty': ['l2'],
         'max_iter': list(range(100, 800, 100)),
         'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
     }
     LR = GridSearchCV(LogisticRegression(), param_grid=LRparam_grid, refit=True, verbose=3)
-    LR = LogisticRegression(max_iter=1000, class_weight="balanced")
+    # LR = LogisticRegression(max_iter=100, class_weight="balanced", C=1,solver='lbfgs',penalty='l2')
     model = LR.fit(x_train, y_train.values.ravel())
+    print(model.best_params_)
+    print(model.best_estimator_)
     return model, vec
 

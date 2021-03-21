@@ -15,7 +15,7 @@ def prepare_labeled_datasets():
     preparator.Preparator.prepare_all('../source_data/')
 
 
-def load_labeled_datasets(dataset_number=(1,1),concatenate=True)->Union[pd.DataFrame,List[pd.DataFrame]]:
+def load_labeled_datasets(dataset_number=(1,5),concatenate=True)->Union[pd.DataFrame,List[pd.DataFrame]]:
     """
      Loads specific number of structured data set files from csv files located in /source_data/dataset_{d+} where
      dataset_number denotes lower and upper bound of datasets that are to be loaded. I.e dataset_number(1,5) loads datasets 1-5.

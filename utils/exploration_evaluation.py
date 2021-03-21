@@ -53,7 +53,7 @@ def generate_evaluation_report_cv(classifier,vectorizer,x_data,y_data,features='
      """
     f1 = []
     acc = []
-    skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     for train_index, test_index in skf.split(x_data, y_data):
         X_train, X_test = x_data.iloc[train_index], x_data.iloc[test_index]
         y_train, y_test = y_data.iloc[train_index], y_data.iloc[test_index]
@@ -90,6 +90,13 @@ def data_label_counts(balanced,imbalanced):
         label_counts[name] = dataset['Label'].value_counts()
     return label_counts
 
+# def data_word_counts(imbalanced : List[pd.DataFrame]):
+#     for index, dataset in enumerate(imbalanced):
+#         dataset = dataset.dropna(how='any', axis=0)
+#         dataset = dataset['Text']
+#         for row in dataset:
+#             print(row,type(row))
+
 def generate_data_exploration_report(balanced: List[pd.DataFrame], imbalanced: List[pd.DataFrame]):
     """
      Generates data exploration report.
@@ -102,5 +109,6 @@ def generate_data_exploration_report(balanced: List[pd.DataFrame], imbalanced: L
                          List of imputbalanced input train data sets.
 
      """
-    label_counts = data_label_counts(balanced,imbalanced)
-    write_to_file_pd(label_counts,'./data/reports/label_value_counts.csv')
+    data_word_counts(imbalanced)
+    # label_counts = data_label_counts(balanced,imbalanced)
+    # write_to_file_pd(label_counts,'./data/reports/label_value_counts.csv')
