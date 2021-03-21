@@ -1,0 +1,9 @@
+rootpath
+pandas
+scikit-learn
+scipy
+pickleshare
+spacy
+spacy-legacy
+nltk
+xgboost
