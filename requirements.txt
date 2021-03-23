@@ -7,3 +7,4 @@ spacy
 spacy-legacy
 nltk
 xgboost
+imbalanced-learn

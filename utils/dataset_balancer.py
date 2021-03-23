@@ -1,10 +1,11 @@
 from typing import Tuple, Any
+from imblearn.over_sampling import RandomOverSampler,SMOTE
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-def balance_data(x:pd.DataFrame, y:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFrame]:
+def balance_data_under_sample(x:pd.DataFrame, y:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFrame]:
     """
     Balances data through under-sampling. Selects so many random normal tweets as
     there are hate speech tweets.
@@ -22,14 +23,14 @@ def balance_data(x:pd.DataFrame, y:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFram
                             The dataframe containing balanced y class label values.
     """
 
-    normal_tweets = y.loc[y == 0]
-    hate_speech_tweets = y.loc[y == 1]
+    normal_text = y.loc[y == 0]
+    hate_speech_text = y.loc[y == 1]
 
-    hate_speech_tweets_size = hate_speech_tweets.size
+    hate_speech_tweets_size = hate_speech_text.size
 
-    normal_tweets_random_balanced = normal_tweets.sample(n=hate_speech_tweets_size)
+    normal_text_random_balanced = normal_text.sample(n=hate_speech_tweets_size)
 
-    y_balanced_list = [normal_tweets_random_balanced, hate_speech_tweets]
+    y_balanced_list = [normal_text_random_balanced, hate_speech_text]
     y_balanced = pd.concat(y_balanced_list)
 
     y_balanced_shuffled = y_balanced.sample(frac=1)  # shuffle the whole set
@@ -38,7 +39,57 @@ def balance_data(x:pd.DataFrame, y:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFram
 
     x_balanced_shuffled = x.loc[y_balanced_ind]
 
-    return x_balanced_shuffled, y_balanced_shuffled
+    return x_balanced_shuffled.to_frame(), y_balanced_shuffled.to_frame()
+
+def balance_data_over_sample(x:pd.DataFrame, y:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFrame]:
+    """
+    Balances data through over-sampling. 
+    Arguments
+    ----------
+    x                       pd.DataFrame
+                            The dataframe containing all x values
+    y 		                pd.DataFrame
+                            The dataframe containing all y values -> hate_speech, shape (n, 1).
+    Returns
+    ----------
+    x_balanced              pd.DataFrame
+                            The dataframe containing balanced x values.
+    y_balanced       	    pd.DataFrame
+                            The dataframe containing balanced y class label values.
+    """
+
+
+    sampler = RandomOverSampler(sampling_strategy=1)
+    # sampler = SMOTE()
+    x_balanced, y_balanced = sampler.fit_resample(x.to_numpy().reshape(-1,1),y.to_numpy().reshape(-1,1))
+    return pd.DataFrame(data=x_balanced.flatten(),columns=['preprocessed']),pd.DataFrame(data=y_balanced.flatten(),columns=['Label'])
+
+def balance_dataset(x:pd.DataFrame,y:pd.DataFrame,method='OVER')->Tuple[pd.DataFrame,pd.DataFrame]:
+    """
+     Balances input dataset through over, or undersampling
+     Arguments
+     ----------
+     x                   pd.DataFrame
+                         Input dataset.
+
+     y                   pd.DataFrame
+                         Input class labels.
+
+     method              AnyStr
+                         Balance method, currently available :
+                         UNDER,OVER or NONE
+     Returns
+     -------
+     data_balanced       Tuple[pd.DataFrame,pd.DataFrame]
+                         Balanced text data and its labels.
+     """
+    if method == 'OVER':
+        return balance_data_over_sample(x,y)
+    elif method == 'UNDER':
+        return balance_data_under_sample(x,y)
+    else:
+        return x,y
+
 
 def split_dataset(x:pd.DataFrame,y:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFrame,pd.DataFrame,pd.DataFrame]:
     """

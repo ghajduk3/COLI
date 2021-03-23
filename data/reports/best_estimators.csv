@@ -1,2 +1,19 @@
 dataset, estimator, params, f1, accuracy
-I       , LR, , ,
+I       , LR,"'C': 10, 'max_iter': 100, 'penalty': 'l2', 'solver': 'newton-cg'",0.6748010178620691,0.67816091954023
+II, LR,"'C': 1, 'max_iter': 100, 'penalty': 'l2', 'solver': 'newton-cg'",0.742348819935563,0.7639234449760766
+III, LR,"'C': 1, 'max_iter': 100, 'penalty': 'l2', 'solver': 'lbfgs'",0.7604160136308895,0.7737463435619802
+IV,LR,"'C': 10, 'max_iter': 100, 'penalty': 'l2', 'solver': 'saga'",0.8951394092325622,0.8982517482517484
+V,LR,"'C': 0.01, 'max_iter': 700, 'penalty': 'l2', 'solver': 'saga'",0.7365921274403202,0.737476961242477
+I-V,,,
+I,SVM,,,
+II,SVM,,,
+III,SVM,,,
+IV,SVM,,,
+V,SVM,,,
+I-V,SVM,,,
+I,XGB,,,
+II,XGB,,,
+III,XGB,,,
+IV,XGB,,,
+V,XGB,,,
+I-V,XGB,,,

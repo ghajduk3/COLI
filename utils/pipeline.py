@@ -2,7 +2,7 @@ from preprocess import preparator
 from typing import Union,List,Tuple,AnyStr
 import os,rootpath
 import pandas as pd
-from .dataset_balancer import balance_data,split_dataset
+from .dataset_balancer import balance_dataset, balance_data_over_sample,split_dataset
 import preprocess.preprocess as prep
 from .classifier_manage import choose_and_create_classifier
 from .exploration_evaluation import generate_evaluation_report,generate_data_exploration_report,generate_evaluation_report_cv
@@ -39,6 +39,8 @@ def load_labeled_datasets(dataset_number=(1,5),concatenate=True)->Union[pd.DataF
     for index in range(first_ds,last_ds+1):
         dataset_path = os.path.join(structured_data_base+str(index),'data.csv')
         df = pd.read_csv(dataset_path, index_col=None)
+        print(dataset_path)
+        print(len(df['Label'].to_list()))
         all_dataframes.append(df)
     if concatenate:
         all_dataframes = pd.concat(all_dataframes, axis=0, ignore_index=True)
@@ -46,17 +48,14 @@ def load_labeled_datasets(dataset_number=(1,5),concatenate=True)->Union[pd.DataF
     else:
         return all_dataframes
 
-def run_dataset_preparation(dataset:pd.DataFrame,balance=True)->Tuple[pd.DataFrame,pd.DataFrame]:
+def run_dataset_preparation(dataset:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFrame]:
     """
      Removes all null rows. Executes preprocessing on the provided dataset.
-     Performs balancing the datasets by undersampling if balance is set to True.
      Returns preprocessed data and its class labels.
      Arguments
      ----------
      dataset             pd.DataFrame
                          Input dataset consisting of Text and Label columns.
-     balance             Bool
-                         Flag which indicates whether the dataset is to be balanced.
      Returns
      -------
      data                Tuple[pd.DataFrame,pd.DataFrame]
@@ -65,14 +64,15 @@ def run_dataset_preparation(dataset:pd.DataFrame,balance=True)->Tuple[pd.DataFra
     dataset = dataset.dropna(how='any', axis=0)
     dataset['preprocessed'] = dataset['Text'].apply(prep.preprocessing)
     x,y = dataset['preprocessed'], dataset['Label']
-    if balance:
-        x,y = balance_data(x,y)
-    data = (x.to_frame(),y.to_frame())
+    # if balance:
+    #     x,y = balance_data_over_sample(x,y)
+    data = (x,y)
     return data
 
-def train_and_split(classifier:AnyStr, vectorizer:AnyStr, x_train:pd.DataFrame, y_train:pd.DataFrame,split=True)->Tuple[object,object]:
+def train_and_split(classifier:AnyStr, vectorizer:AnyStr, x_train:pd.DataFrame, y_train:pd.DataFrame,split=True,method='OVER')->Tuple[object,object]:
     """
      Splits inpur x,y dataset into train and test datasets if split is set to true.
+     Balances training dataset through under-sampling or over-sampling.
      Chooses and trains selected classifier model with features created by selected vectorizer.
      Arguments
      ----------
@@ -92,6 +92,9 @@ def train_and_split(classifier:AnyStr, vectorizer:AnyStr, x_train:pd.DataFrame, 
 
      split                bool
                           Flag which indicates whether the input data is to be splitted.
+
+     balance              bool
+                          Flag which indicates whether the input data is to be balanced.
      Returns
      -------
      model		          Model of implemented Classifiers
@@ -102,9 +105,11 @@ def train_and_split(classifier:AnyStr, vectorizer:AnyStr, x_train:pd.DataFrame, 
      """
     if split:
         X_train, X_test, y_train, y_test = split_dataset(x_train,y_train)
+        X_train,y_train = balance_dataset(X_train,y_train,method=method)
         model, vectorizer = choose_and_create_classifier(classifier, X_train, y_train, vectorizer)
-        return model,vectorizer,X_test,y_test
+        return model,vectorizer,X_test.to_frame(),y_test.to_frame()
     else:
+        x_train,y_train = balance_data_over_sample(x_train,y_train)
         model, vectorizer = choose_and_create_classifier(classifier, x_train, y_train, vectorizer)
         return model,vectorizer
 
@@ -130,6 +135,7 @@ def transform_and_predict(model,vectorizer,x_test:pd.DataFrame,features='preproc
      y_pred               pd.DataFrame
                           Predicted class labels for input test data.
      """
+    print(x_test)
     x_test = vectorizer.transform(x_test[features].values)
     y_pred = model.predict(x_test)
     return y_pred
