@@ -6,7 +6,8 @@ from .dataset_balancer import balance_dataset, balance_data_over_sample,split_da
 import preprocess.preprocess as prep
 from .classifier_manage import choose_and_create_classifier
 from .exploration_evaluation import generate_evaluation_report,generate_data_exploration_report,generate_evaluation_report_cv
-
+from sklearn.utils.class_weight import compute_class_weight
+import numpy as np
 def prepare_labeled_datasets():
     """
     Preprocesses and prepares unstructured source datasets into structured datasets. Each processed dataset has two columns [Text,Label].
@@ -61,6 +62,7 @@ def run_dataset_preparation(dataset:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFra
      data                Tuple[pd.DataFrame,pd.DataFrame]
                          Preprocessed and (balanced) text data and its labels.
      """
+
     dataset = dataset.dropna(how='any', axis=0)
     dataset['preprocessed'] = dataset['Text'].apply(prep.preprocessing)
     x,y = dataset['preprocessed'], dataset['Label']
@@ -69,7 +71,7 @@ def run_dataset_preparation(dataset:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFra
     data = (x,y)
     return data
 
-def train_and_split(classifier:AnyStr, vectorizer:AnyStr, x_train:pd.DataFrame, y_train:pd.DataFrame,split=True,method='OVER')->Tuple[object,object]:
+def train_and_split(classifier:AnyStr, vectorizer:AnyStr, x_train:pd.DataFrame, y_train:pd.DataFrame,split=True,method='UNDER')->Tuple[object,object]:
     """
      Splits inpur x,y dataset into train and test datasets if split is set to true.
      Balances training dataset through under-sampling or over-sampling.
@@ -104,9 +106,12 @@ def train_and_split(classifier:AnyStr, vectorizer:AnyStr, x_train:pd.DataFrame, 
                           CountVectorizer or TfidfVectorizer fit and transformed for training data
      """
     if split:
+        class_weights = compute_class_weight('balanced', np.unique(y_train), y_train)
+        # print(class_weights)
         X_train, X_test, y_train, y_test = split_dataset(x_train,y_train)
-        X_train,y_train = balance_dataset(X_train,y_train,method=method)
-        model, vectorizer = choose_and_create_classifier(classifier, X_train, y_train, vectorizer)
+        # X_train,y_train = balance_dataset(X_train,y_train,method=method)
+        # print(y_train['Label'].value_counts())
+        model, vectorizer = choose_and_create_classifier(classifier, X_train.to_frame(), y_train.to_frame(), vectorizer)
         return model,vectorizer,X_test.to_frame(),y_test.to_frame()
     else:
         x_train,y_train = balance_data_over_sample(x_train,y_train)
