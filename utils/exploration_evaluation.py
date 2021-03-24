@@ -56,10 +56,10 @@ def generate_evaluation_report_cv(classifier,vectorizer,x_data,y_data,features='
     acc = []
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     for train_index, test_index in skf.split(x_data, y_data):
-        X_train, X_test = x_data.iloc[train_index], x_data.iloc[test_index]
-        y_train, y_test = y_data.iloc[train_index], y_data.iloc[test_index]
+        X_train, X_test = x_data.iloc[train_index].to_frame(), x_data.iloc[test_index].to_frame()
+        y_train, y_test = y_data.iloc[train_index].to_frame(), y_data.iloc[test_index].to_frame()
         # Balances training data
-        X_train,y_train = balance_dataset(X_train,y_train,method='OVER')
+        # X_train,y_train = balance_dataset(X_train,y_train,method='OVER')
         model, vector = choose_and_create_classifier(classifier, X_train, y_train, vectorizer)
         X_test = vector.transform(X_test[features].values)
         y_pred = model.predict(X_test)

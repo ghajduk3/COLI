@@ -1,5 +1,5 @@
 dataset, estimator, params, f1, accuracy
-I       , LR,"'C': 10, 'max_iter': 100, 'penalty': 'l2', 'solver': 'newton-cg'",0.6748010178620691,0.67816091954023
+I       , LR,"C=0.001, class_weight='balanced', max_iter=300, solver='sag'",0.51499390400945,0.6401564341583628
 II, LR,"'C': 1, 'max_iter': 100, 'penalty': 'l2', 'solver': 'newton-cg'",0.742348819935563,0.7639234449760766
 III, LR,"'C': 1, 'max_iter': 100, 'penalty': 'l2', 'solver': 'lbfgs'",0.7604160136308895,0.7737463435619802
 IV,LR,"'C': 10, 'max_iter': 100, 'penalty': 'l2', 'solver': 'saga'",0.8951394092325622,0.8982517482517484
