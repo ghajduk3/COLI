@@ -1,16 +1,16 @@
-dataset, estimator, params, f1, accuracy
-I       , LR,"C=0.001, class_weight='balanced', max_iter=300, solver='sag'",0.51499390400945,0.6401564341583628
-II, LR,"'C': 1, 'max_iter': 100, 'penalty': 'l2', 'solver': 'newton-cg'",0.742348819935563,0.7639234449760766
-III, LR,"'C': 1, 'max_iter': 100, 'penalty': 'l2', 'solver': 'lbfgs'",0.7604160136308895,0.7737463435619802
-IV,LR,"'C': 10, 'max_iter': 100, 'penalty': 'l2', 'solver': 'saga'",0.8951394092325622,0.8982517482517484
-V,LR,"'C': 0.01, 'max_iter': 700, 'penalty': 'l2', 'solver': 'saga'",0.7365921274403202,0.737476961242477
-I-V,,,
-I,SVM,,,
-II,SVM,,,
-III,SVM,,,
-IV,SVM,,,
-V,SVM,,,
-I-V,SVM,,,
+dataset, estimator, params,weight f1, accuracy
+I       , LR,"C=0.001, class_weight='balanced', max_iter=300, solver='sag'",0.7390099949078267,0.7414957677059896
+II, LR,"'C': 1, 'max_iter': 100, 'penalty': 'l2', 'solver': 'newton-cg'",0.8453107767932135,0.8428953554572391
+III, LR,"'C': 1, 'max_iter': 100, 'penalty': 'l2', 'solver': 'lbfgs'",0.7922577665284918,0.792752491501657
+IV,LR,"'C': 10, 'max_iter': 100, 'penalty': 'l2', 'solver': 'saga'",0.9300881155287735,0.930805040917891
+V,LR,"'C': 0.01, 'max_iter': 700, 'penalty': 'l2', 'solver': 'saga'",0.8653362375025676 ,0.8529781197828932
+I-V,LR,,0.8302635024225887,0.8292187082841348
+I,SVM,"'C': 10, 'gamma': 0.1, 'kernel': 'sigmoid'",0.7092994863683163,0.7500075002678667
+II,SVM,,0.8561608387148218 ,0.8620443420616721
+III,SVM,,0.8234,
+IV,SVM,,0.9105099781046689,0.921
+V,SVM,,0.9040657834627683,0.8844775656805556
+I-V,SVM,,0.8434799828288188,0.8454792863622619
 I,XGB,,,
 II,XGB,,,
 III,XGB,,,

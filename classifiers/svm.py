@@ -45,6 +45,9 @@ def setup_classifier(x_train:pd.DataFrame,y_train: pd.DataFrame ,features="prepr
         return 1
     param_grid = {'C': [0.1, 1, 10, 100], 'gamma': [1, 0.1, 0.01, 0.001], 'kernel': ['rbf', 'poly', 'sigmoid']}
     # SVM= GridSearchCV(svm.SVC(), param_grid, refit=True, verbose=2,cv=2)
-    SVM = svm.SVC(kernel='rbf', C=10, gamma=1)
+    SVM = svm.SVC(class_weight='balanced')
     model = SVM.fit(x_train, y_train.values.ravel())
+    # print(model.best_params_)
+    # print(model.best_estimator_)
+
     return model, vec

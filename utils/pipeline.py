@@ -140,7 +140,6 @@ def transform_and_predict(model,vectorizer,x_test:pd.DataFrame,features='preproc
      y_pred               pd.DataFrame
                           Predicted class labels for input test data.
      """
-    print(x_test)
     x_test = vectorizer.transform(x_test[features].values)
     y_pred = model.predict(x_test)
     return y_pred
