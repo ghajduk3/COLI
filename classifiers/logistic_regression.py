@@ -50,10 +50,10 @@ def setup_classifier(x_train: pd.DataFrame, y_train: pd.DataFrame, features="pre
         'max_iter': list(range(100, 800, 100)),
         'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
     }
-    LR = GridSearchCV(LogisticRegression(class_weight='balanced'), param_grid=LRparam_grid, refit=True, verbose=3)
-    # LR = LogisticRegression(C= 20, penalty='l2', solver='newton-cg',class_weight='balanced')
+    # LR = GridSearchCV(LogisticRegression(class_weight='balanced'), param_grid=LRparam_grid, refit=True, verbose=3)
+    LR = LogisticRegression(solver='lbfgs',class_weight='balanced',max_iter=5000)
     model = LR.fit(x_train, y_train.values.ravel())
-    print(model.best_params_)
-    print(model.best_estimator_)
+    # print(model.best_params_)
+    # print(model.best_estimator_)
     return model, vec
 

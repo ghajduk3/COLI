@@ -25,6 +25,8 @@ def generate_evaluation_report(y_true:pd.DataFrame,y_pred:pd.DataFrame,target_na
      classification_report   classification_report
                           Text report showing the main classification metrics.
      """
+    print(f1_score(y_true,y_pred,average='weighted'))
+    print(accuracy_score(y_true,y_pred))
     return classification_report(y_true,y_pred,target_names=target_names)
 
 def generate_evaluation_report_cv(classifier,vectorizer,x_data,y_data,features='preprocessed'):
@@ -63,10 +65,11 @@ def generate_evaluation_report_cv(classifier,vectorizer,x_data,y_data,features='
         model, vector = choose_and_create_classifier(classifier, X_train, y_train, vectorizer)
         X_test = vector.transform(X_test[features].values)
         y_pred = model.predict(X_test)
-        f1.append(f1_score(y_test,y_pred))
+        print(classification_report(y_test,y_pred))
+        f1.append(f1_score(y_test,y_pred,average='weighted'))
         acc.append(accuracy_score(y_test,y_pred))
 
-    return sum(f1)/len(f1) , sum(acc)/len(acc)
+    return sum(f1)/len(f1),sum(acc)/len(acc)
 
 def data_label_counts(balanced,imbalanced):
     """
