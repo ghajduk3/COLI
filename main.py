@@ -5,9 +5,9 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', datefmt=
 from utils import pipeline,classifier_manage
 
 if __name__ == '__main__':
-    ds = pipeline.load_labeled_datasets(dataset_number=(1,5))
+    ds = pipeline.load_labeled_datasets(dataset_number=(1,1))
     x,y = pipeline.run_dataset_preparation(ds)
-    model,vectorizer,x_test,y_true = pipeline.train_and_split('SVM','tfidf',x,y)
+    model,vectorizer,x_test,y_true = pipeline.train_and_split('LOGISTIC REGRESSION','tfidf',x,y)
     # classifier_manage.save_classifier(model,'SVM',vectorizer)
     y_test = pipeline.transform_and_predict(model,vectorizer,x_test)
 

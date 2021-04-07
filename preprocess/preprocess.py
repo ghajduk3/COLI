@@ -72,7 +72,7 @@ def preprocessing(text,stem=0):
             if len(word) > 1:
                 # apply stemmer to single word
                 # word = stemmer.stem(word)
-                # word = lemmer.lemmatize(word)
+                word = lemmer.lemmatize(word)
                 tokens.append(word)
 
     # convert tokens back to text
