@@ -112,12 +112,38 @@ class Preparator(object):
         output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_6', 'data.csv')
         utilities.write_to_file(comments, output_path)
         logger.info('Dataset_6 has been prepared')
+    
+    @staticmethod
+    def prepare_dataset_7(input_file_path:str):
+        """
+        Reads the data from dataset_7. Converts it into format Text,Label(0-Non hate,1-Racism,2-Sexism) and writes the contents to file.
+        """
+
+        class_text_number_map = {
+            'neither': 0,
+            'racism': 1,
+            'sexism': 2
+        }
+
+        directory = os.path.join(rootpath.detect(), 'source_data', 'eng', 'dataset_7', 'tweets_dataset')
+
+        comments = []
+        for filename in os.listdir(directory):
+            labels, data = utilities.read_file_contents(os.path.join(directory, filename), ',')
+            class_text = filename.split(".")[0]
+            comments_file = [[row[1], class_text_number_map[class_text]] for row in data]
+            comments.extend(comments_file)
+        
+        comments.insert(0,['Text','Label'])
+        comments = utilities.strip_and_replace_new_lines(comments)
+        output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_7', 'data.csv')
+        utilities.write_to_file(comments, output_path)
+        logger.info('Dataset_7 has been prepared')
 
     @staticmethod
     def prepare_all(source_data_path:str):
         """
         Preprocesses and prepares unstructured source datasets into structured datasets. Each processed dataset has two columns [Text,Label].
-        Label represents binary class [1-Hate speech, 0-Non-hate speech].
         """
         for index,directory in enumerate(reversed(os.listdir(source_data_path))):
             dataset_name = 'dataset_' + str(index + 1)
