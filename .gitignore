@@ -128,3 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .idea
+
+# dataset 8
+source_data/eng/dataset_8/tweets_dataset
+structured_data/dataset_8/data.csv

@@ -6,7 +6,7 @@ from typing import AnyStr, Tuple, List
 logger = logging.getLogger(__name__)
 
 
-def read_file_contents(input_file_path: AnyStr, delimiter=",") -> Tuple:
+def read_file_contents(input_file_path: AnyStr, delimiter=",", encoding="utf-8") -> Tuple:
     """
     Reads content and class labels from  csv file.
     ----------
@@ -19,7 +19,7 @@ def read_file_contents(input_file_path: AnyStr, delimiter=",") -> Tuple:
                         Class labels and input data.
     """
     try:
-        with open(input_file_path,'r',encoding='utf-8') as csv_file:
+        with open(input_file_path,'r',encoding=encoding) as csv_file:
             reader = csv.reader(csv_file,delimiter=delimiter)
             labels = next(reader)
             data = [line for line in reader]
