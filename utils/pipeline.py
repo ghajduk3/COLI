@@ -13,7 +13,7 @@ def prepare_labeled_datasets():
     Preprocesses and prepares unstructured source datasets into structured datasets. Each processed dataset has two columns [Text,Label].
     Label represents binary class [1-Hate speech, 0-Non-hate speech].
      """
-    preparator.Preparator.prepare_all('../source_data/eng')
+    preparator.Preparator.prepare_all(os.path.join('source_data', 'eng'))
 
 
 def load_labeled_datasets(dataset_number=(1,5),concatenate=True)->Union[pd.DataFrame,List[pd.DataFrame]]:

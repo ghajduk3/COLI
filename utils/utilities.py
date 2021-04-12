@@ -19,7 +19,7 @@ def read_file_contents(input_file_path: AnyStr, delimiter=",") -> Tuple:
                         Class labels and input data.
     """
     try:
-        with open(input_file_path,'r') as csv_file:
+        with open(input_file_path,'r',encoding='utf-8') as csv_file:
             reader = csv.reader(csv_file,delimiter=delimiter)
             labels = next(reader)
             data = [line for line in reader]
@@ -62,7 +62,7 @@ def write_to_file_pd(content : pd.DataFrame ,output_file_path: AnyStr):
 
 def read_file_contents_txt(input_file_path:str):
     try:
-        with open(input_file_path, 'r') as txt_file:
+        with open(input_file_path, 'r', encoding='utf-8') as txt_file:
             return txt_file.readline()
     except IOError:
         logger.exception("I/O error")
@@ -83,7 +83,7 @@ def write_to_file(content: List, output_file_path:AnyStr):
                         Output file path.
     """
     try:
-        with open(output_file_path,'w+') as output_file:
+        with open(output_file_path,'w+',newline='',encoding='utf-8') as output_file:
             writer = csv.writer(output_file)
             writer.writerows(content)
             logger.info("Data has been succesfully written to file")
@@ -115,9 +115,12 @@ def split_input_path(input_path:AnyStr)->Tuple[AnyStr,AnyStr]:
 def transform_dataset_2_3(text:str,indexes:str)->list:
     indexes = eval(indexes) if isinstance(indexes,str) else []
     comment_by_idx = []
-    for index,comment in enumerate(re.split('\d.\s+',text)[1:]):
+    for index,comment in enumerate(re.split('^(\d+).\s+',text,flags=re.MULTILINE)[1:][1::2]):
         if indexes and index+1 in indexes:
             comment_by_idx.append([comment,1])
         else:
             comment_by_idx.append([comment,0])
     return comment_by_idx
+
+def strip_and_replace_new_lines(data:list)->list:
+    return [[str(col).replace('\n', ' ').replace('\r', ' ').strip() for col in row] for row in data]
