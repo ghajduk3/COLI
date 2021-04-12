@@ -139,6 +139,35 @@ class Preparator(object):
         output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_7', 'data.csv')
         utilities.write_to_file(comments, output_path)
         logger.info('Dataset_7 has been prepared')
+    
+    @staticmethod
+    def prepare_dataset_8(input_file_path:str):
+        """
+        Reads the data from dataset_8. Converts it into format Text,Label(0-Appearance,1-Intelligence,2-Political,3-Racial,4-Sextual) and writes the contents to file.
+        """
+
+        class_text_number_map = {
+            'Appearance Data': 0,
+            'Intelligence Data': 1,
+            'Political Data': 2,
+            'Racial Data': 3,
+            'Sextual Data': 4
+        }
+
+        directory = os.path.join(rootpath.detect(), 'source_data', 'eng', 'dataset_8', 'tweets_dataset')
+
+        comments = []
+        for filename in os.listdir(directory):
+            labels, data = utilities.read_file_contents(os.path.join(directory, filename), ',', 'unicode_escape')
+            class_text = filename.split(".")[0]
+            comments_file = [[row[0], class_text_number_map[class_text]] for row in data if row[1].lower() == "yes"]
+            comments.extend(comments_file)
+        
+        comments.insert(0,['Text','Label'])
+        comments = utilities.strip_and_replace_new_lines(comments)
+        output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_8', 'data.csv')
+        utilities.write_to_file(comments, output_path)
+        logger.info('Dataset_8 has been prepared')
 
     @staticmethod
     def prepare_all(source_data_path:str):
