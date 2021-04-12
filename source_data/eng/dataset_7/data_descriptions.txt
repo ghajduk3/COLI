@@ -1,0 +1,11 @@
+Link to publication: https://www.aclweb.org/anthology/N16-2013
+Link to data: https://github.com/ZeerakW/hatespeech
+Task description: 3-topic (Sexist, Racist, Not)
+Details of task: Racism, Sexism
+Size of dataset: 16,914
+Percentage abusive: 0.32
+Language: English
+Level of annotation: Posts
+Platform: Twitter
+Medium: Text
+Reference: Waseem, Z. and Horvy, D., 2016. Hateful Symbols or Hateful People? Predictive Features for Hate Speech Detection on Twitter. In: Proceedings of the NAACL Student Research Workshop. San Diego, California: Association for Computational Linguistics, pp.88-93.
