@@ -103,10 +103,10 @@ class Preparator(object):
         comments = []
         for filename in os.listdir(directory):
             labels, data = utilities.read_file_contents(os.path.join(directory, filename), ',')
-            data = [row[1] for row in data]
             class_text = filename.split("_")[0]
-            comments_file = [[row, class_text_number_map[class_text]] for row in data]
+            comments_file = [[row[1], class_text_number_map[class_text]] for row in data]
             comments.extend(comments_file)
+        
         comments.insert(0,['Text','Label'])
         comments = utilities.strip_and_replace_new_lines(comments)
         output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_6', 'data.csv')
