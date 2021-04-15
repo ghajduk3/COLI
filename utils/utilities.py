@@ -124,3 +124,15 @@ def transform_dataset_2_3(text:str,indexes:str)->list:
 
 def strip_and_replace_new_lines(data:list)->list:
     return [[str(col).replace('\n', ' ').replace('\r', ' ').strip() for col in row] for row in data]
+
+def class_distribution_dataset(path:str)->dict:
+    labels, data = read_file_contents(path, ',')
+
+    class_distribution = {}
+
+    for row in data:
+        if row[1] not in class_distribution:
+            class_distribution[row[1]] = 0
+        class_distribution[row[1]] += 1
+
+    return class_distribution
