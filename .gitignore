@@ -129,6 +129,9 @@ dmypy.json
 .pyre/
 .idea
 
+# CroSloEngual BERT model
+classifiers/bert/CroSloEngual/pytorch_model.bin
+
 # dataset 8
 source_data/eng/dataset_8/tweets_dataset
 structured_data/dataset_8/data.csv
