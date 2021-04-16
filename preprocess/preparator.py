@@ -46,28 +46,28 @@ class Preparator(object):
         logger.info("Dataset_3 has been prepared")
 
     @staticmethod
-    def prepare_dataset_5(input_file_path:str):
+    def prepare_dataset_4(input_file_path:str):
         """
-        Reads the data from dataset_5. Converts it into format Text,Label(1-Hate,0-Non hate) and writes the contents to file.
+        Reads the data from dataset_4. Converts it into format Text,Label(1-Hate,0-Non hate) and writes the contents to file.
         """
 
-        labels, data = utilities.read_file_contents(os.path.join(rootpath.detect(), 'source_data', 'eng', 'dataset_5', 'annotations_metadata.csv'), ',')
+        labels, data = utilities.read_file_contents(os.path.join(rootpath.detect(), 'source_data', 'eng', 'dataset_4', 'annotations_metadata.csv'), ',')
         comments = []
         for row in data:
             file, user, forum, cont, label = row
-            text = utilities.read_file_contents_txt(os.path.join(rootpath.detect(), 'source_data', 'eng', 'dataset_5', 'all_files', file + '.txt'))
+            text = utilities.read_file_contents_txt(os.path.join(rootpath.detect(), 'source_data', 'eng', 'dataset_4', 'all_files', file + '.txt'))
             label = 1 if label =='hate' else 0
             comments.append([text,label])
         comments.insert(0,['Text','Label'])
         comments = utilities.strip_and_replace_new_lines(comments)
-        output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_5', 'data.csv')
+        output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_4', 'data.csv')
         utilities.write_to_file(comments, output_path)
-        logger.info("Dataset_5 has been prepared")
+        logger.info("Dataset_4 has been prepared")
 
     @staticmethod
-    def prepare_dataset_6(input_file_path:str):
+    def prepare_dataset_5(input_file_path:str):
         """
-        Reads the data from dataset_6. Converts it into format Text,Label(0-Archaic,1-Class,2-Disability,3-Ethnicity,4-Gender,5-Nationality,6-Religion,7-Sexual Orientation) and writes the contents to file.
+        Reads the data from dataset_5. Converts it into format Text,Label(0-Archaic,1-Class,2-Disability,3-Ethnicity,4-Gender,5-Nationality,6-Religion,7-Sexual Orientation) and writes the contents to file.
         """
 
         class_text_number_map = {
@@ -81,7 +81,7 @@ class Preparator(object):
             'sexorient': 7
         }
 
-        directory = os.path.join(rootpath.detect(), 'source_data', 'eng', 'dataset_6', 'downloaded_tweets_dataset')
+        directory = os.path.join(rootpath.detect(), 'source_data', 'eng', 'dataset_5', 'downloaded_tweets_dataset')
 
         comments = []
         for filename in os.listdir(directory):
@@ -92,9 +92,9 @@ class Preparator(object):
         
         comments.insert(0,['Text','Label'])
         comments = utilities.strip_and_replace_new_lines(comments)
-        output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_6', 'data.csv')
+        output_path = os.path.join(rootpath.detect(), 'structured_data', 'dataset_5', 'data.csv')
         utilities.write_to_file(comments, output_path)
-        logger.info('Dataset_6 has been prepared')
+        logger.info('Dataset_5 has been prepared')
     
     @staticmethod
     def prepare_dataset_8(input_file_path:str):
