@@ -132,6 +132,6 @@ dmypy.json
 # CroSloEngual BERT model
 classifiers/bert/CroSloEngual/pytorch_model.bin
 
-# dataset 8
-source_data/eng/dataset_8/tweets_dataset
-structured_data/dataset_8/data.csv
+# dataset 6
+source_data/eng/dataset_6/tweets_dataset
+structured_data/dataset_6/data.csv
