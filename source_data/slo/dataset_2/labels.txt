@@ -1,0 +1,19 @@
+Class:
+0 appropriate (ni sporni govor)
+1 inappropriate (nespodobni govor)
+2 offensive (žalitev)
+3 violent (nasilje)
+
+Type:
+1 racism (ksenofobija in rasizem)
+2 migrants (begunci/migranti)
+3 islamophobia (islamofobija)
+4 antisemitism (antisemitizem)
+5 religion (druge religije)
+6 homophobia (homofobija)
+7 sexism (seksizem)
+8 ideology (ideologija)
+9 media (novinarji in mediji)
+10 politics (politika/-i)
+11 individual (posameznik)
+12 other (drugo)
