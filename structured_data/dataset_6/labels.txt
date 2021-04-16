@@ -1,8 +1,5 @@
-Archaic: 0
-Class: 1
-Disability: 2
-Ethnicity: 3
-Gender: 4
-Nationality: 5
-Religion: 6
-Sexual Orientation: 7
+Appearance: 0
+Intelligence: 1
+Political: 2
+Racial: 3
+Sextual: 4
