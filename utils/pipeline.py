@@ -36,6 +36,8 @@ def combine_binary_datasets(lang = 'eng'):
         dataset_numbers = [int(name.split('_')[1]) for name in os.listdir(base_data_path)]
         dataset_lower_bound, dataset_upper_bound = min(dataset_numbers) , max(dataset_numbers)
         dataset = read_combine_datasets(base_data_path,(dataset_lower_bound,dataset_upper_bound),concatenate=True)
+        dataset.dropna(inplace=True)
+        dataset.reset_index(inplace=True, drop=True)
         utils.utilities.write_to_file_pd(dataset,output_data_path)
 
 def load_binary_datasets(lang='eng')-> pd.DataFrame:
@@ -68,7 +70,10 @@ def combine_multiclass_datasets(lang = 'eng'):
         binary_data = load_binary_datasets()
         print(binary_data)
         binary_non_hate_data = binary_data[binary_data['Label'] == 0]
-        utils.utilities.write_to_file_pd(pd.concat([dataset_5,dataset_6,binary_non_hate_data], axis=0, ignore_index=True), output_data_path)
+        dataset = pd.concat([dataset_5,dataset_6,binary_non_hate_data], axis=0, ignore_index=True)
+        dataset.dropna(inplace=True)
+        dataset.reset_index(inplace=True, drop=True)
+        utils.utilities.write_to_file_pd(dataset, output_data_path)
 
 def load_labeled_datasets(dataset_number=(1,5),lang='eng',type='binary',concatenate=True)->Union[pd.DataFrame,List[pd.DataFrame]]:
     """
