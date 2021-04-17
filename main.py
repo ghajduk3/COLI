@@ -1,18 +1,28 @@
 import logging
+import os.path
+
+import rootpath
+
+import utils.utilities
 
 logger = logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
 from utils import pipeline,classifier_manage
 from preprocess import combinator
 from classifiers import bert
+import pandas as pd
 
 if __name__ == '__main__':
     # pipeline.prepare_labeled_datasets()
-    # ds = pipeline.load_labeled_datasets(dataset_number=(6,6),type='multiclass')
+    # ds = pipeline.load_labeled_datasets(dataset_number=(1,1))
     # pipeline.combine_multiclass_datasets()
-    # pipeline.combine_binary_datasets()
-    ds = pipeline.load_multiclass_datasets()
+    pipeline.combine_binary_datasets()
+    ds = pipeline.load_binary_datasets()
     x, y = pipeline.run_dataset_preparation(ds)
+    # new_df = pd.DataFrame(x).join(y)
+    # utils.utilities.write_to_file_pd(new_df,os.path.join(rootpath.detect(), 'data', 'temp', 'eng', 'binary', 'data.csv'))
+
+
 
     model = bert.setup_classifier(
         model_name = "classifiers/bert/CroSloEngual",
