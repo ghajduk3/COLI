@@ -1,5 +1,0 @@
-Appearance: 0
-Intelligence: 1
-Political: 2
-Racial: 3
-Sextual: 4
