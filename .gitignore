@@ -135,3 +135,7 @@ classifiers/bert/CroSloEngual/pytorch_model.bin
 # dataset 6
 source_data/eng/dataset_6/tweets_dataset
 structured_data/dataset_6/data.csv
+
+# pytorch models
+models/*.pt
+models/*.pth
