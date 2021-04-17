@@ -39,10 +39,12 @@ def combine_binary_datasets(lang = 'eng'):
         utils.utilities.write_to_file_pd(dataset,output_data_path)
 
 def load_binary_datasets(lang='eng')-> pd.DataFrame:
-    input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'binary' , 'data.csv')
+    input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'binary', 'data.csv')
     return pd.read_csv(input_base_path)
 
-
+def load_multiclass_datasets(lang='eng')-> pd.DataFrame:
+    input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'multiclass', 'data.csv')
+    return pd.read_csv(input_base_path)
 
 def combine_multiclass_datasets(lang = 'eng'):
     """
