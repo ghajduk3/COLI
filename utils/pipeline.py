@@ -1,3 +1,4 @@
+import utils.utilities
 from preprocess import preparator
 from typing import Union,List,Tuple,AnyStr
 import os,rootpath
@@ -8,16 +9,55 @@ from .classifier_manage import choose_and_create_classifier
 from .exploration_evaluation import generate_evaluation_report,generate_data_exploration_report,generate_evaluation_report_cv
 from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
+from preprocess.combinator import read_combine_datasets
 
-def prepare_labeled_datasets():
+def prepare_labeled_datasets(lang = 'eng'):
     """
     Preprocesses and prepares unstructured source datasets into structured datasets. Each processed dataset has two columns [Text,Label].
     Label represents binary class [1-Hate speech, 0-Non-hate speech].
      """
-    preparator.Preparator.prepare_all(os.path.join('source_data', 'eng'))
+    print(os.path.join('data', 'source_data', lang))
+    preparator.Preparator.prepare_all(os.path.join('data', 'source_data', lang), lang)
 
+def combine_binary_datasets(lang = 'eng'):
+    """
 
-def load_labeled_datasets(dataset_number=(1,5),concatenate=True)->Union[pd.DataFrame,List[pd.DataFrame]]:
+    Arguments
+    ----------
+    lang
+
+    Returns
+    -------
+
+    """
+    base_data_path = os.path.join(rootpath.detect(), 'data', 'structured_data', lang, 'binary')
+    output_data_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'binary' , 'data.csv')
+    if os.path.exists(base_data_path):
+        dataset_numbers = [int(name.split('_')[1]) for name in os.listdir(base_data_path)]
+        dataset_lower_bound, dataset_upper_bound = min(dataset_numbers) , max(dataset_numbers)
+        dataset = read_combine_datasets(base_data_path,(dataset_lower_bound,dataset_upper_bound),concatenate=True)
+        utils.utilities.write_to_file_pd(dataset,output_data_path)
+
+def combine_multiclass_datasets(lang = 'eng'):
+    """
+
+    Parameters
+    ----------
+    lang
+
+    Returns
+    -------
+
+    """
+    base_data_path = os.path.join(rootpath.detect(), 'data', 'structured_data', lang, 'multiclass')
+    output_data_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'multiclass', 'data.csv')
+    if os.path.exists(base_data_path):
+        dataset_numbers = [int(name.split('_')[1]) for name in os.listdir(base_data_path)]
+        dataset_lower_bound, dataset_upper_bound = min(dataset_numbers), max(dataset_numbers)
+        dataset = read_combine_datasets(base_data_path, (dataset_lower_bound, dataset_upper_bound), concatenate=True)
+        utils.utilities.write_to_file_pd(dataset, output_data_path)
+
+def load_labeled_datasets(dataset_number=(1,5),lang='eng',type='binary',concatenate=True)->Union[pd.DataFrame,List[pd.DataFrame]]:
     """
      Loads specific number of structured data set files from csv files located in /source_data/dataset_{d+} where
      dataset_number denotes lower and upper bound of datasets that are to be loaded. I.e dataset_number(1,5) loads datasets 1-5.
@@ -30,25 +70,16 @@ def load_labeled_datasets(dataset_number=(1,5),concatenate=True)->Union[pd.DataF
                          I.e dataset_number(2,4) denotes that datasets 2,3,4 are to be loaded.
      concatenate         Bool
                          Flag which indicates wheter all dataframes are to be concatenated into one.
+     lang                String
+                         Language of the data to be loaded
+     type                String
+                         Type of the classification labels to be loaded. Default: binary, available are binary and multiclass
      Returns
      -------
      all_dataframes      Union[pd.DataFrame,List[pd.DataFrame]]
                          All datasets conctatenated into one pd.DataFrame or list of all datasets.
      """
-    structured_data_base = os.path.join(rootpath.detect(), 'structured_data', 'dataset_')
-    all_dataframes = []
-    first_ds, last_ds = dataset_number
-    for index in range(first_ds,last_ds+1):
-        dataset_path = os.path.join(structured_data_base+str(index),'data.csv')
-        df = pd.read_csv(dataset_path, index_col=None)
-        print(dataset_path)
-        print(len(df['Label'].to_list()))
-        all_dataframes.append(df)
-    if concatenate:
-        all_dataframes = pd.concat(all_dataframes, axis=0, ignore_index=True)
-        return all_dataframes
-    else:
-        return all_dataframes
+    return read_combine_datasets(os.path.join(rootpath.detect(),'data', 'structured_data',lang,type),dataset_number,concatenate)
 
 def run_dataset_preparation(dataset:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFrame]:
     """
