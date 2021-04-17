@@ -1,8 +1,0 @@
-Kralj Novak, Petra; Mozetič, Igor and Ljubešić, Nikola, 2021, 
-  Slovenian Twitter hate speech dataset IMSyPP-sl, Slovenian language resource repository CLARIN.SI, 
-  http://hdl.handle.net/11356/1398.
-
-Subset of the whole data:
-1000 tweets - appropriate & inappropriate
-500 tweets - offensive
-539 tweets - violent

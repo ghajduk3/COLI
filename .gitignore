@@ -113,7 +113,8 @@ venv.bak/
 # Spyder project settings
 .spyderproject
 .spyproject
-
+data/source_data/eng/multiclass/dataset_6/*
+data/structured_data/eng/multiclass/dataset_6/data.csv
 # Rope project settings
 .ropeproject
 
@@ -133,8 +134,8 @@ dmypy.json
 classifiers/bert/CroSloEngual/pytorch_model.bin
 
 # dataset 6
-source_data/eng/dataset_6/tweets_dataset
-structured_data/dataset_6/data.csv
+data/source_data/eng/multiclass/dataset_6/tweets_dataset
+data/structured_data/dataset_6/data.csv
 
 # pytorch models
 models/*.pt

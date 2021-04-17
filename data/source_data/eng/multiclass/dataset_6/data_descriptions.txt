@@ -1,0 +1,11 @@
+Link to publication: https://arxiv.org/pdf/1802.09416.pdf
+Link to data: https://github.com/Mrezvan94/Harassment-Corpus
+Task description: Multi-topic harassment detection
+Details of task: Racism, Sexism, Appearance-related, Intellectual, Political
+Size of dataset: 24,189
+Percentage abusive: 0.13
+Language: English
+Level of annotation: Posts
+Platform: Twitter
+Medium: Text
+Reference: Rezvan, M., Shekarpour, S., Balasuriya, L., Thirunarayan, K., Shalin, V. and Sheth, A., 2018. A Quality Type-aware Annotated Corpus and Lexicon for Harassment Research. ArXiv,.

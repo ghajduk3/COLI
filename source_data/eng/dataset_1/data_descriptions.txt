@@ -1,7 +1,0 @@
-data source:https://github.com/sjtuprog/fox-news-comments
-publication:https://arxiv.org/pdf/1710.07395.pdf
-reference:Gao, L. and Huang, R., 2018. Detecting Online Hate Speech Using Context Aware Models. ArXiv,
-dataset size:1528
-task description:Binary(Hate(1)/Not(0))
-language:English
-percentage abusive:0.28
