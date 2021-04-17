@@ -58,7 +58,7 @@ def write_to_file_pd(content : pd.DataFrame ,output_file_path: AnyStr):
     output_file_path    AnyStr
                         Output file path.
     """
-    content.to_csv(output_file_path)
+    content.to_csv(output_file_path,index=False)
 
 def read_file_contents_txt(input_file_path:str):
     try:
