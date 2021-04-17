@@ -283,6 +283,29 @@ def test_classifier(
 
     return predictions, true_labels
 
+
+def save_checkpoint(path, model, optimizer, epoch, loss):
+    torch.save({
+        'epoch': epoch,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'loss': loss
+        }, path)
+
+
+def save_model(path, model):
+    torch.save(model.state_dict(), path)
+
+
+def load_checkpoint(path):
+    checkpoint = torch.load(path)
+    return checkpoint['model_state_dict'], checkpoint['optimizer_state_dict'], checkpoint['epoch'], checkpoint['loss']
+
+
+def load_model(path):
+    return torch.load(path)
+
+
 def select_device():
 
     if torch.cuda.is_available():

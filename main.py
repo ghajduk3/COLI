@@ -16,6 +16,8 @@ if __name__ == '__main__':
         num_labels = 2
     )
 
+    model.load_state_dict(bert.load_model("models/m1.pt"))
+
     dataset = bert.setup_data(
         model_name = "classifiers/bert/CroSloEngual",
         x = x,
@@ -39,6 +41,8 @@ if __name__ == '__main__':
         dataset = dataset,
         batch_size = 32
     )
+
+    bert.save_model("models/m1.pt", model)
 
     """
     ds = pipeline.load_labeled_datasets(dataset_number=(1,1))
