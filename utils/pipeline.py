@@ -9,7 +9,7 @@ from .classifier_manage import choose_and_create_classifier
 from .exploration_evaluation import generate_evaluation_report,generate_data_exploration_report,generate_evaluation_report_cv
 from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
-from preprocess.combinator import read_combine_datasets
+from preprocess.combinator import read_combine_datasets, normalize_dataset_5, normalize_dataset_6
 
 def prepare_labeled_datasets(lang = 'eng'):
     """
@@ -38,6 +38,12 @@ def combine_binary_datasets(lang = 'eng'):
         dataset = read_combine_datasets(base_data_path,(dataset_lower_bound,dataset_upper_bound),concatenate=True)
         utils.utilities.write_to_file_pd(dataset,output_data_path)
 
+def load_binary_datasets(lang='eng')-> pd.DataFrame:
+    input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'binary' , 'data.csv')
+    return pd.read_csv(input_base_path)
+
+
+
 def combine_multiclass_datasets(lang = 'eng'):
     """
 
@@ -54,8 +60,13 @@ def combine_multiclass_datasets(lang = 'eng'):
     if os.path.exists(base_data_path):
         dataset_numbers = [int(name.split('_')[1]) for name in os.listdir(base_data_path)]
         dataset_lower_bound, dataset_upper_bound = min(dataset_numbers), max(dataset_numbers)
-        dataset = read_combine_datasets(base_data_path, (dataset_lower_bound, dataset_upper_bound), concatenate=True)
-        utils.utilities.write_to_file_pd(dataset, output_data_path)
+        dataset_5,dataset_6 = read_combine_datasets(base_data_path, (dataset_lower_bound, dataset_upper_bound), concatenate=False)
+        dataset_5= normalize_dataset_5(dataset_5)
+        dataset_6 = normalize_dataset_6(dataset_6)
+        binary_data = load_binary_datasets()
+        print(binary_data)
+        binary_non_hate_data = binary_data[binary_data['Label'] == 0]
+        utils.utilities.write_to_file_pd(pd.concat([dataset_5,dataset_6,binary_non_hate_data], axis=0, ignore_index=True), output_data_path)
 
 def load_labeled_datasets(dataset_number=(1,5),lang='eng',type='binary',concatenate=True)->Union[pd.DataFrame,List[pd.DataFrame]]:
     """

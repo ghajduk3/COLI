@@ -3,14 +3,14 @@ import logging
 logger = logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
 from utils import pipeline,classifier_manage
-
+from preprocess import combinator
 from classifiers import bert
 
 if __name__ == '__main__':
     # pipeline.prepare_labeled_datasets()
-    # ds = pipeline.load_labeled_datasets(dataset_number=(1,2))
-    # print(ds)
-    # pipeline.combine_multiclass_datasets()
+    # ds = pipeline.load_labeled_datasets(dataset_number=(6,6),type='multiclass')
+
+    pipeline.combine_multiclass_datasets()
     # x, y = pipeline.run_dataset_preparation(ds)
     #
     # model = bert.setup_classifier(

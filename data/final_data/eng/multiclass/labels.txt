@@ -1,0 +1,6 @@
+Non hate : 0
+Racism : 1
+Sexual : 2
+Intelligence : 3
+Appearance : 4
+Other : 5
