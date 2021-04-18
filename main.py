@@ -1,23 +1,16 @@
 import logging
-import os.path
-
-import rootpath
-
-import utils.utilities
 
 logger = logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
-from utils import pipeline,classifier_manage
-from preprocess import combinator
+from utils import pipeline
 from classifiers import bert
-import pandas as pd
 
 if __name__ == '__main__':
     # pipeline.prepare_labeled_datasets()
-    # ds = pipeline.load_labeled_datasets(dataset_number=(1,1))
-    # pipeline.combine_multiclass_datasets()
-    pipeline.combine_binary_datasets()
-    ds = pipeline.load_binary_datasets()
+    # ds = pipeline.load_labeled_datasets(dataset_number=(1,4))
+    pipeline.combine_multiclass_datasets()
+    # pipeline.combine_binary_datasets()
+    ds = pipeline.load_multiclass_datasets()
     x, y = pipeline.run_dataset_preparation(ds)
     # new_df = pd.DataFrame(x).join(y)
     # utils.utilities.write_to_file_pd(new_df,os.path.join(rootpath.detect(), 'data', 'temp', 'eng', 'binary', 'data.csv'))
@@ -58,18 +51,19 @@ if __name__ == '__main__':
     bert.save_model("models/m1.pt", model)
 
     """
-    ds = pipeline.load_labeled_datasets(dataset_number=(5,5))
-    x,y = pipeline.run_dataset_preparation(ds)
-    # model,vectorizer,x_test,y_true = pipeline.train_and_split('LOGISTIC REGRESSION','tfidf',x,y)
-    # classifier_manage.save_classifier(model,'SVM',vectorizer)
+    # ds = pipeline.load_labeled_datasets(dataset_number=(1,4))
+    # x,y = pipeline.run_dataset_preparation(ds)
+    # model,vectorizer,x_test,y_true = pipeline.train_and_split('SVM','tfidf',x,y)
+    # # print(y_true.value_counts())
+    # # classifier_manage.save_classifier(model,'SVM',vectorizer)
     # y_test = pipeline.transform_and_predict(model,vectorizer,x_test)
-
-    f1,acc = pipeline.evaluate_cross_validation('LOGISTIC REGRESSION','tfidf',x,y)
-    print(f1,acc)
-    # report = pipeline.evaluate(y_true,y_test,target_names = ['no-hate','hate'])
+    # # f1,acc = pipeline.evaluate_cross_validation('SVM','tfidf',x,y)
+    # # print(f1,acc)
+    # report = pipeline.evaluate(y_true,y_test,target_names = ['0','1' , '2','3', '4','5'])
     # print(report)
     # pipeline.explore()
     """
+
 
 
 

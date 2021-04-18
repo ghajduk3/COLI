@@ -37,6 +37,7 @@ def combine_binary_datasets(lang = 'eng'):
         dataset_lower_bound, dataset_upper_bound = min(dataset_numbers) , max(dataset_numbers)
         dataset = read_combine_datasets(base_data_path,(dataset_lower_bound,dataset_upper_bound),concatenate=True)
         dataset.dropna(inplace=True)
+        dataset.drop_duplicates(subset='Text', keep='first', inplace=True)
         dataset.reset_index(inplace=True, drop=True)
         utils.utilities.write_to_file_pd(dataset,output_data_path)
 
@@ -72,6 +73,7 @@ def combine_multiclass_datasets(lang = 'eng'):
         binary_non_hate_data = binary_data[binary_data['Label'] == 0]
         dataset = pd.concat([dataset_5,dataset_6,binary_non_hate_data], axis=0, ignore_index=True)
         dataset.dropna(inplace=True)
+        dataset.drop_duplicates(subset='Text',keep='first',inplace=True)
         dataset.reset_index(inplace=True, drop=True)
         utils.utilities.write_to_file_pd(dataset, output_data_path)
 
