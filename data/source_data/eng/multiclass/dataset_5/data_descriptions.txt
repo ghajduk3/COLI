@@ -1,4 +1,4 @@
-Link to publication: https://aaai.org/ocs/index.php/ICWSM/ICWSM18/paper/view/17905/16996 https://arxiv.org/pdf/1804.04257.pdf
+    Link to publication: https://aaai.org/ocs/index.php/ICWSM/ICWSM18/paper/view/17905/16996 https://arxiv.org/pdf/1804.04257.pdf
 Link to data: https://github.com/mayelsherif/hate_speech_icwsm18
 Task description: Class, Sexual Orientation (sexorient), Disability, Gender, Ethnicity (ethn), Nationality (nation), Religion (rel), Archaic
 Details of task: Hate per se

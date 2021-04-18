@@ -65,6 +65,7 @@ def generate_evaluation_report_cv(classifier,vectorizer,x_data,y_data,features='
         model, vector = choose_and_create_classifier(classifier, X_train, y_train, vectorizer)
         X_test = vector.transform(X_test[features].values)
         y_pred = model.predict(X_test)
+        print(len(y_train),len(y_test))
         print(classification_report(y_test,y_pred))
         f1.append(f1_score(y_test,y_pred,average='weighted'))
         acc.append(accuracy_score(y_test,y_pred))

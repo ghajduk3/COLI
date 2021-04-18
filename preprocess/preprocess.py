@@ -68,12 +68,12 @@ def preprocessing(text,stem=0):
 
     # remove stopwords and words with length 1
     for word in words:
-        # if word not in stopwords:
-        if len(word) > 1:
-            # apply stemmer to single word
-            # word = stemmer.stem(word)
-            # word = lemmer.lemmatize(word)
-            tokens.append(word)
+        if word not in stopwords:
+            if len(word) > 1:
+                # apply stemmer to single word
+                # word = stemmer.stem(word)
+                word = lemmer.lemmatize(word)
+                tokens.append(word)
 
     # convert tokens back to text
     preprocessed_text = ' '.join([str(element) for element in tokens])
