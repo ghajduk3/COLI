@@ -1,0 +1,13 @@
+0 Non hate
+1 racism
+2 migrants
+3 islamophobia
+4 antisemitism
+5 religion
+6 homophobia
+7 sexism
+8 ideology
+9 media
+10 politics
+11 individual
+12 other

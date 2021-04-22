@@ -2,27 +2,26 @@ import logging
 
 logger = logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
-from utils import pipeline
+from utils import pipeline, utilities
 from classifiers import bert
 
 if __name__ == '__main__':
-    # pipeline.prepare_labeled_datasets()
-    # ds = pipeline.load_labeled_datasets(dataset_number=(1,4))
-    pipeline.combine_multiclass_datasets()
-    # pipeline.combine_binary_datasets()
-    ds = pipeline.load_multiclass_datasets()
-    x, y = pipeline.run_dataset_preparation(ds)
-    # new_df = pd.DataFrame(x).join(y)
-    # utils.utilities.write_to_file_pd(new_df,os.path.join(rootpath.detect(), 'data', 'temp', 'eng', 'binary', 'data.csv'))
 
+    pipeline.prepare_labeled_datasets("eng")
+    pipeline.prepare_labeled_datasets("slo")
 
+    pipeline.create_final_datasets("eng")
+    pipeline.create_final_datasets("slo")
+
+    ds = pipeline.load_binary_datasets("slo")
+    x, y = pipeline.run_dataset_preparation(ds, "slo", remove_stopwords=True, do_lemmatization=True)
 
     model = bert.setup_classifier(
         model_name = "classifiers/bert/CroSloEngual",
         num_labels = 2
     )
 
-    # model.load_state_dict(bert.load_model("models/m1.pt"))
+    model.load_state_dict(bert.load_model("models/bert/binary.pt"))
 
     dataset = bert.setup_data(
         model_name = "classifiers/bert/CroSloEngual",
@@ -32,6 +31,7 @@ if __name__ == '__main__':
         max_length = 180
     )
 
+    """
     model, stats = bert.train_classifier(
         model = model,
         dataset = dataset,
@@ -41,6 +41,7 @@ if __name__ == '__main__':
         freeze_encoder_layers = 8,
         epochs = 1
     )
+    """
 
     predictions, true_labels = bert.test_classifier(
         model = model,
@@ -48,7 +49,9 @@ if __name__ == '__main__':
         batch_size = 32
     )
 
-    bert.save_model("models/m1.pt", model)
+    utilities.print_performance_metrics(predictions, true_labels)
+
+    #bert.save_model("models/m1.pt", model)
 
     """
     ds = pipeline.load_labeled_datasets(dataset_number=(6,6), type="multiclass")
