@@ -1,24 +1,21 @@
 import spacy
 import re
+import classla
 
 from nltk.stem import PorterStemmer,SnowballStemmer, WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 
-nlp = spacy.load("en_core_web_sm", disable=['tagger', 'parser', 'ner'])
-stopwords = nlp.Defaults.stop_words
+nlp_eng = spacy.load("en_core_web_sm", disable=['tagger', 'parser', 'ner'])
+eng_stopwords = set(nlp_eng.Defaults.stop_words)
+slo_stopwords = set(stopwords.words('slovene'))
 
-
-
-def preprocessing(text,stem=0):
+def eng_preprocessing(text, remove_stopwords=True, do_lemmatization=True):
     """
     Applies different steps of preprocessing to a text.
     Preprocessing includes:
-    - remove all emoticons
-    - remove non-standard lexical tokens (which are not numeric or alphabetical)
-    - remove url and @name mentions
     - remove standard stopwords (english stopwords from spacy)
-    - convert all letters to lower case
-    - perform stemming (PorterStemmer nltk, SnowBallStemmer nltk)
+    - perform lemmatizing
 
     Arguments
     ----------
@@ -29,7 +26,77 @@ def preprocessing(text,stem=0):
     preprocessed_text:      String
                             Text which is converted by preprocessing.
     """
-    stemmers = [SnowballStemmer("english"), PorterStemmer()]
+    
+    text = base_preprocessing(text)
+
+    tokens = []
+
+    # split text to single words
+    words = word_tokenize(text)
+
+    lemmer = WordNetLemmatizer()
+
+    # remove stopwords and words with length 1
+    for word in words:
+        if not remove_stopwords or word not in eng_stopwords:
+            if do_lemmatization:
+                word = lemmer.lemmatize(word)
+            tokens.append(word)
+
+    # convert tokens back to text
+    preprocessed_text = ' '.join([str(element) for element in tokens])
+    return preprocessed_text
+
+def slo_preprocessing(dataset, remove_stopwords=True, do_lemmatization=True):
+
+    # do base proccesing
+    dataset['preprocessed'] = dataset['Text'].apply(base_preprocessing)
+
+    # create pipelines
+    tokenizer = classla.Pipeline('sl', processors='tokenize', type='nonstandard', logging_level='WARN')
+    lemmatizer = classla.Pipeline('sl', processors='tokenize, lemma', type='nonstandard', logging_level='WARN')
+
+    # do tokenization
+    documents = '\n'.join(dataset['preprocessed'].values)
+    out_docs = tokenizer(documents)
+
+    for i, sentence in enumerate(out_docs.sentences):
+        #print("DOCUMENT")
+        seq = []
+        for word in sentence.words:
+            if not remove_stopwords or word.text not in slo_stopwords:
+                seq.append(word.text)
+
+        dataset.at[i, 'preprocessed'] = ' '.join(seq)
+
+    # do lemmatization
+    if do_lemmatization:
+        documents = '\n'.join(dataset['preprocessed'].values)
+        out_docs = lemmatizer(documents)
+        
+        for i, sentence in enumerate(out_docs.sentences):
+            dataset.at[i, 'preprocessed'] = ' '.join(word.lemma for word in sentence.words)
+
+    return dataset
+
+def base_preprocessing(text):
+    """
+    Applies different steps of preprocessing to a text.
+    Preprocessing includes:
+    - remove all emoticons
+    - remove non-standard lexical tokens (which are not numeric or alphabetical)
+    - remove url and @name mentions
+    - convert all letters to lower case
+
+    Arguments
+    ----------
+    text:                   AnyStr
+                            Text which should be converted by preprocessing
+    Returns
+    -------
+    preprocessed_text:      String
+                            Text which is converted by preprocessing.
+    """
     EMOJI_PATTERN = re.compile(
         "(["
         "\U0001F1E0-\U0001F1FF"  # flags (iOS)
@@ -46,36 +113,20 @@ def preprocessing(text,stem=0):
     )
     text = re.sub(EMOJI_PATTERN,"",text)
     # remove (twitter) urls
-    text = re.sub(r"http://t.co/[a-zA-Z0-9]+", "", text)
-
+    text = re.sub(r"http://t.co/[a-zA-Z0-9čČšŠžŽ]+", "", text)
+    text = re.sub(r"https://t.co/[a-zA-Z0-9čČšŠžŽ]+", "", text)
 
     # remove all hashtags or @name Mentions (Usernames only allowed to includes characters A-Z, 0-9 and underscores)
-    text = re.sub(r"[@#][a-zA-Z0-9_]+", "", text)
+    text = re.sub(r"[@#][a-zA-Z0-9_čČšŠžŽ]+", "", text)
 
     # remove non alphabetical characters
-    text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
+    text = re.sub(r"[^a-zA-Z0-9\sčČšŠžŽ]", "", text)
+
+    # remove multiple white spaces
+    text = re.sub(' +', ' ', text)
 
     # convert all letters to lower case
     text = text.lower()
 
-    # split text to single words
-    words = word_tokenize(text)
-    tokens = []
-
-
-    stemmer = stemmers[stem]
-    lemmer = WordNetLemmatizer()
-
-    # remove stopwords and words with length 1
-    for word in words:
-        if word not in stopwords:
-            if len(word) > 1:
-                # apply stemmer to single word
-                # word = stemmer.stem(word)
-                word = lemmer.lemmatize(word)
-                tokens.append(word)
-
-    # convert tokens back to text
-    preprocessed_text = ' '.join([str(element) for element in tokens])
-    return preprocessed_text
+    return text.strip()
 

@@ -141,3 +141,5 @@ data/structured_data/dataset_6/data.csv
 # pytorch models
 models/*.pt
 models/*.pth
+models/bert/*.pt
+models/bert/*.pth

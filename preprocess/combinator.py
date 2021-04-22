@@ -1,7 +1,7 @@
 import pandas as pd, os
 from typing import Union, List
 
-def normalize_dataset_5(dataset_5: pd.DataFrame ):
+def normalize_eng_dataset_5(dataset_5: pd.DataFrame ):
     """
     Map from dataset 5 class labels into combined dataset class labels
     Archaic : 0  -> Racism : 1
@@ -26,9 +26,7 @@ def normalize_dataset_5(dataset_5: pd.DataFrame ):
     dataset_5['Label'] = dataset_5['Label'].apply(lambda x : class_transfer_map[x])
     return dataset_5
 
-    pass
-
-def normalize_dataset_6(dataset_6 : pd.DataFrame):
+def normalize_eng_dataset_6(dataset_6 : pd.DataFrame):
     """
     Map from dataset 6 class labels into combined dataset class labels
     Appearance: 0 -> Appearance : 4
@@ -46,6 +44,41 @@ def normalize_dataset_6(dataset_6 : pd.DataFrame):
     }
     dataset_6['Label'] = dataset_6['Label'].apply(lambda x : class_transfer_map[x])
     return dataset_6
+
+def normalize_slo_dataset_2(dataset_2 : pd.DataFrame):
+    """
+    Map from dataset 2 class labels into combined dataset class labels
+    0 Non hate -> Non hate : 0
+    1 racism -> Racism : 1
+    2 migrants -> Other : 5
+    3 islamophobia -> Other : 5
+    4 antisemitism -> Racism : 1
+    5 religion -> Other : 5
+    6 homophobia -> Sexual : 2
+    7 sexism -> Sexual : 2
+    8 ideology -> Other : 5
+    9 media -> Other : 5
+    10 politics -> Other : 5
+    11 individual -> Other : 5
+    12 other -> Other : 5
+    """
+    class_transfer_map = {
+        0: 0,
+        1: 1,
+        2: 5,
+        3: 5,
+        4: 1,
+        5: 5,
+        6: 2,
+        7: 2,
+        8: 5,
+        9: 5,
+        10: 5,
+        11: 5,
+        12: 5
+    }
+    dataset_2['Label'] = dataset_2['Label'].apply(lambda x : class_transfer_map[x])
+    return dataset_2
 
 def read_combine_datasets(data_input_base_path: str, dataset_number=(1, 1), concatenate=True) -> Union[
     pd.DataFrame, List[pd.DataFrame]]:
