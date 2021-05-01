@@ -3,6 +3,7 @@ Kralj Novak, Petra; Mozetič, Igor and Ljubešić, Nikola, 2021,
   http://hdl.handle.net/11356/1398.
 
 Subset of the whole data:
-1000 tweets - appropriate & inappropriate
-500 tweets - offensive
-539 tweets - violent
+1000 tweets - appropriate
+1000 tweets - inappropriate
+1000 tweets - offensive
+832 tweets - violent
