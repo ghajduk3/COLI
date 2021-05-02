@@ -149,7 +149,7 @@ class Preparator(object):
         non_hate.columns = ['Text', 'Label']
         non_hate['Label'] = 0
 
-        hate = data.loc[data['Class'].isin([3])]
+        hate = data.loc[data['Class'].isin([2, 3])]
         del hate['Class']
         hate.columns = ['Text', 'Label']
         hate['Label'] = hate['Label'].fillna(12)
