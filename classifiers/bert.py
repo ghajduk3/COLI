@@ -253,6 +253,8 @@ def test_classifier(
     print("")
     print("Running Prediction...")
 
+    model.to(device)
+
     model.eval()
 
     predictions , true_labels = [], []
@@ -276,8 +278,9 @@ def test_classifier(
         logits = logits.detach().cpu().numpy()
         label_ids = b_labels.numpy()
         
-        predictions.append(logits)
-        true_labels.append(label_ids)
+        #predictions.append(logits)
+        predictions.extend(list(np.argmax(logits, axis=1).flatten()))
+        true_labels.extend(list(label_ids))
     
     print('DONE.')
 

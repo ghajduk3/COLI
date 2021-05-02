@@ -136,3 +136,62 @@ def class_distribution_dataset(path:str)->dict:
         class_distribution[row[1]] += 1
 
     return class_distribution
+
+
+def avg_accuracy(predictions,labels):
+    return sum(1 for i, j in zip(predictions, labels) if i == j) / len(predictions) 
+
+def round_to_percentages(value):
+    return round(round(value, 4) * 100, 2)
+
+def majority_class(data):
+    elements_count = {}
+    for element in data:
+        if element not in elements_count:
+            elements_count[element] = 0
+        elements_count[element] += 1
+    maximum = max(elements_count, key=elements_count.get)
+    return elements_count[maximum] / len(data)
+
+def print_performance_metrics(predicted, true):
+    matrix = {}
+    labels = sorted(list(set(true)))
+
+    for t in labels:
+        for p in labels:
+            matrix[(t, p)] = sum([1 for i, j in zip(true, predicted) if i == t and j == p]) / len(true)
+
+    print()
+    print("Confusion Matrix")
+    print("Rows - Actual")
+    print("Columns - Predicted")
+    print()
+
+    print(("{:>3}"+" | "+"{:>6}"*len(labels)+" | ").format(" ", *[p for p in labels]))
+
+    print("-" * (3 + 3 + 6 * len(labels) + 3 + 6))
+
+    for t in labels:
+        print(("{:>3}"+" | "+"{:>6.2f}"*len(labels)+" | "+"{:>6.2f}").format(t, *[round_to_percentages(matrix[(t, p)]) for p in labels], round_to_percentages(sum([matrix[(t, p)] for p in labels]))))
+
+    print("-" * (3 + 3 + 6 * len(labels) + 3 + 6))
+
+    print(("{:>3}"+" | "+"{:>6.2f}"*len(labels)+" | ").format(" ", *[round_to_percentages(sum([matrix[(t, p)] for t in labels])) for p in labels]))
+    
+    print()
+    print("{:<35}:{:>8.4f}".format("Majority Class", round(majority_class(true), 4)))
+    print("{:<35}:{:>8.4f}".format("Accuracy", round(avg_accuracy(predicted, true), 4)))
+    print()
+
+    if len(labels) == 2:
+        sensitivity = matrix[(labels[0], labels[0])] / (matrix[(labels[0], labels[0])] + matrix[(labels[0], labels[1])])
+        specificity = matrix[(labels[1], labels[1])] / (matrix[(labels[1], labels[1])] + matrix[(labels[1], labels[0])])
+        positive_predictive = matrix[(labels[0], labels[0])] / (matrix[(labels[0], labels[0])] + matrix[(labels[1], labels[0])])
+        negative_predictive = matrix[(labels[1], labels[1])] / (matrix[(labels[1], labels[1])] + matrix[(labels[0], labels[1])])
+        f1_score = 2 * ((positive_predictive * sensitivity) / (positive_predictive + sensitivity))
+
+        print("{:<35}:{:>8.4f}".format("Sensitivity, Recall", round(sensitivity, 4)))
+        print("{:<35}:{:>8.4f}".format("Specificity", round(specificity, 4)))
+        print("{:<35}:{:>8.4f}".format("Positive Predictive, Precision", round(positive_predictive, 4)))
+        print("{:<35}:{:>8.4f}".format("Negative Predictive", round(negative_predictive, 4)))
+        print("{:<35}:{:>8.4f}".format("F1 Score", round(f1_score, 4)))

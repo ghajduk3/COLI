@@ -9,7 +9,7 @@ from .classifier_manage import choose_and_create_classifier
 from .exploration_evaluation import generate_evaluation_report,generate_data_exploration_report,generate_evaluation_report_cv
 from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
-from preprocess.combinator import read_combine_datasets, normalize_dataset_5, normalize_dataset_6
+from preprocess.combinator import read_combine_datasets, normalize_eng_dataset_5, normalize_eng_dataset_6, normalize_slo_dataset_2
 
 def prepare_labeled_datasets(lang = 'eng'):
     """
@@ -37,17 +37,9 @@ def combine_binary_datasets(lang = 'eng'):
         dataset_lower_bound, dataset_upper_bound = min(dataset_numbers) , max(dataset_numbers)
         dataset = read_combine_datasets(base_data_path,(dataset_lower_bound,dataset_upper_bound),concatenate=True)
         dataset.dropna(inplace=True)
-        dataset.drop_duplicates(subset='Text', keep='first', inplace=True)
+        dataset.drop_duplicates(subset=['Text', 'Label'], keep='first',inplace=True)
         dataset.reset_index(inplace=True, drop=True)
         utils.utilities.write_to_file_pd(dataset,output_data_path)
-
-def load_binary_datasets(lang='eng')-> pd.DataFrame:
-    input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'binary', 'data.csv')
-    return pd.read_csv(input_base_path)
-
-def load_multiclass_datasets(lang='eng')-> pd.DataFrame:
-    input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'multiclass', 'data.csv')
-    return pd.read_csv(input_base_path)
 
 def combine_multiclass_datasets(lang = 'eng'):
     """
@@ -65,17 +57,69 @@ def combine_multiclass_datasets(lang = 'eng'):
     if os.path.exists(base_data_path):
         dataset_numbers = [int(name.split('_')[1]) for name in os.listdir(base_data_path)]
         dataset_lower_bound, dataset_upper_bound = min(dataset_numbers), max(dataset_numbers)
-        dataset_5,dataset_6 = read_combine_datasets(base_data_path, (dataset_lower_bound, dataset_upper_bound), concatenate=False)
-        dataset_5= normalize_dataset_5(dataset_5)
-        dataset_6 = normalize_dataset_6(dataset_6)
-        binary_data = load_binary_datasets()
-        print(binary_data)
-        binary_non_hate_data = binary_data[binary_data['Label'] == 0]
-        dataset = pd.concat([dataset_5,dataset_6,binary_non_hate_data], axis=0, ignore_index=True)
+
+        if lang == "eng":
+            dataset_5,dataset_6 = read_combine_datasets(base_data_path, (dataset_lower_bound, dataset_upper_bound), concatenate=False)
+            dataset_5 = normalize_eng_dataset_5(dataset_5)
+            dataset_6 = normalize_eng_dataset_6(dataset_6)
+            dataset = pd.concat([dataset_5,dataset_6], axis=0, ignore_index=True)
+        
+        if lang == "slo":
+            dataset_1,dataset_2 = read_combine_datasets(base_data_path, (dataset_lower_bound, dataset_upper_bound), concatenate=False)
+            dataset_2 = normalize_slo_dataset_2(dataset_2)
+            dataset = pd.concat([dataset_1,dataset_2], axis=0, ignore_index=True)
+
         dataset.dropna(inplace=True)
-        dataset.drop_duplicates(subset='Text',keep='first',inplace=True)
+        dataset.drop_duplicates(subset=['Text', 'Label'], keep='first',inplace=True)
         dataset.reset_index(inplace=True, drop=True)
         utils.utilities.write_to_file_pd(dataset, output_data_path)
+
+def load_binary_datasets(lang='eng')-> pd.DataFrame:
+    input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'binary', 'data.csv')
+    try:
+        df = pd.read_csv(input_base_path)
+    except pd.errors.EmptyDataError:
+        df = pd.DataFrame()
+    return df
+
+def load_multiclass_datasets(lang='eng')-> pd.DataFrame:
+    input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'multiclass', 'data.csv')
+    try:
+        df = pd.read_csv(input_base_path)
+    except pd.errors.EmptyDataError:
+        df = pd.DataFrame()
+    return df
+
+def create_final_datasets(lang = "eng"):
+    combine_binary_datasets(lang)
+    combine_multiclass_datasets(lang)
+
+    binary = load_binary_datasets(lang)
+    multiclass = load_multiclass_datasets(lang)
+
+    if not binary.empty:
+        binary_non_hate = binary.loc[binary["Label"] == 0]
+
+        multiclass_full = pd.concat([multiclass, binary_non_hate], axis=0, ignore_index=True)
+
+        multiclass_full.dropna(inplace=True)
+        multiclass_full.drop_duplicates(subset=['Text', 'Label'], keep='first',inplace=True)
+        multiclass_full.reset_index(inplace=True, drop=True)
+        multiclass_output_data_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'multiclass', 'data.csv')
+        utils.utilities.write_to_file_pd(multiclass_full, multiclass_output_data_path)
+    
+    if not multiclass.empty:
+        multiclass_non_hate = multiclass.loc[multiclass["Label"] == 0]
+        multiclass_hate = multiclass.loc[multiclass["Label"].isin([1, 2, 3, 4, 5])]
+        multiclass_hate["Label"] = 1
+
+        binary_full = pd.concat([binary, multiclass_non_hate, multiclass_hate], axis=0, ignore_index=True)
+
+        binary_full.dropna(inplace=True)
+        binary_full.drop_duplicates(subset=['Text', 'Label'], keep='first',inplace=True)
+        binary_full.reset_index(inplace=True, drop=True)
+        binary_output_data_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'binary' , 'data.csv')
+        utils.utilities.write_to_file_pd(binary_full, binary_output_data_path)
 
 def load_labeled_datasets(dataset_number=(1,5),lang='eng',type='binary',concatenate=True)->Union[pd.DataFrame,List[pd.DataFrame]]:
     """
@@ -101,7 +145,7 @@ def load_labeled_datasets(dataset_number=(1,5),lang='eng',type='binary',concaten
      """
     return read_combine_datasets(os.path.join(rootpath.detect(),'data', 'structured_data',lang,type),dataset_number,concatenate)
 
-def run_dataset_preparation(dataset:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFrame]:
+def run_dataset_preparation(dataset:pd.DataFrame, lang="eng", remove_stopwords=True, do_lemmatization=True)->Tuple[pd.DataFrame,pd.DataFrame]:
     """
      Removes all null rows. Executes preprocessing on the provided dataset.
      Returns preprocessed data and its class labels.
@@ -116,7 +160,11 @@ def run_dataset_preparation(dataset:pd.DataFrame)->Tuple[pd.DataFrame,pd.DataFra
      """
 
     dataset = dataset.dropna(how='any', axis=0)
-    dataset['preprocessed'] = dataset['Text'].apply(prep.preprocessing)
+    if lang == "eng":
+        dataset['preprocessed'] = dataset['Text'].apply(prep.eng_preprocessing, remove_stopwords=remove_stopwords, do_lemmatization=do_lemmatization)
+    elif lang == "slo":
+        dataset = prep.slo_preprocessing(dataset, remove_stopwords=remove_stopwords, do_lemmatization=do_lemmatization)
+
     x,y = dataset['preprocessed'], dataset['Label']
     # if balance:
     #     x,y = balance_data_over_sample(x,y)
