@@ -4,17 +4,17 @@ from typing import Union, List
 def normalize_eng_dataset_5(dataset_5: pd.DataFrame ):
     """
     Map from dataset 5 class labels into combined dataset class labels
-    Archaic : 0  -> Racism : 1
+    Archaic : 0  -> Other : 5
     Class: 1 -> Intelligence : 3
     Disability: 2 -> Intelligence : 3
     Ethnicity: 3 -> Racism : 1
     Gender: 4 -> Sexual : 2
     Nationality: 5 -> Racism : 1
-    Religion: 6 -> 5
+    Religion: 6 -> Other : 5
     Sexual Orientation: 7 -> Sexual : 2
     """
     class_transfer_map = {
-        0: 1,
+        0: 5,
         1: 3,
         2: 3,
         3: 1,
