@@ -35,8 +35,7 @@ def choose_and_create_classifier(classifier: AnyStr, X_train: pd.DataFrame, y_tr
                     	CountVectorizer or TfidfVectorizer fit and transformed for training data
 
     """
-    print(classifier)
-    if classifier == 'LOGISTIC REGRESSION':
+    if classifier == 'LR':
         model,vectorizer = logistic_regression.setup_classifier(X_train,y_train,features='preprocessed',method=vectorizer,ngrams=n_grams)
     elif classifier == 'SVM':
         model, vectorizer = svm.setup_classifier(X_train, y_train, features='preprocessed',method=vectorizer, ngrams=n_grams)
