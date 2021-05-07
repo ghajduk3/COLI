@@ -10,6 +10,8 @@ from .exploration_evaluation import generate_evaluation_report,generate_data_exp
 from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
 from preprocess.combinator import read_combine_datasets, normalize_eng_dataset_5, normalize_eng_dataset_6, normalize_slo_dataset_2
+from classifiers import bert
+
 
 def prepare_labeled_datasets(lang = 'eng'):
     """
@@ -180,7 +182,7 @@ def train_and_split(classifier:AnyStr, vectorizer:AnyStr, x_train:pd.DataFrame, 
      ----------
      classifier          AnyStr
                          Name of a preferred classifier to be used. Currently available :
-                         'LOGISTIC REGRESSION', 'SVM', 'XGB'.
+                         'LR', 'SVM', 'XGB'.
 
      vectorizer          AnyStr
                          Name of a preferred vectorizer to be used. Currently available :
@@ -274,7 +276,7 @@ def evaluate_cross_validation(classifier:AnyStr,vectorizer:AnyStr,x_data:pd.Data
      ----------
      classifier          AnyStr
                          Name of a preferred classifier to be used. Currently available :
-                         'LOGISTIC REGRESSION', 'SVM', 'XGB'.
+                         'LR', 'SVM', 'XGB'.
 
      vectorizer          AnyStr
                          Name of a preferred vectorizer to be used. Currently available :
@@ -303,3 +305,45 @@ def explore():
     balanced = [run_dataset_preparation(dataset,balance=True)[1] for dataset in datasets]
     imbalanced = [run_dataset_preparation(dataset, balance=False)[1] for dataset in datasets]
     generate_data_exploration_report(balanced,imbalanced)
+
+def run_bert_experiment(x_english,y_english,x_slovene,y_slovene,type='bi'):
+    model = bert.setup_classifier(
+        model_name="classifiers/bert/CroSloEngual",
+        num_labels=2
+    )
+
+    dataset = bert.setup_data(
+        model_name = "classifiers/bert/CroSloEngual",
+        x = x_english,
+        y = y_english,
+        do_lower_case = False,
+        max_length = 180
+    )
+    model_name = 'binary.pt' if type == 'bi' else 'multiclass.pt'
+
+    model.load_state_dict(bert.load_model("models/bert/" + model_name))
+
+    predictions, true_labels = bert.test_classifier(
+        model = model,
+        dataset = dataset,
+        batch_size = 32
+    )
+    utils.utilities.print_performance_metrics(predictions, true_labels)
+
+    dataset_slovene = bert.setup_data(
+        model_name = "classifiers/bert/CroSloEngual",
+        x = x_slovene,
+        y = y_slovene,
+        do_lower_case = False,
+        max_length = 180
+    )
+    predictions_slov, true_labels_slov = bert.test_classifier(
+        model = model,
+        dataset = dataset,
+        batch_size = 32
+    )
+    utils.utilities.print_performance_metrics(predictions_slov, true_labels_slov)
+
+
+
+
