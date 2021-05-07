@@ -53,7 +53,6 @@ def setup_classifier(x_train: pd.DataFrame, y_train: pd.DataFrame, features="pre
     # LR = GridSearchCV(LogisticRegression(class_weight='balanced'), param_grid=LRparam_grid, refit=True, verbose=3)
     LR = LogisticRegression(solver='lbfgs',class_weight='balanced',max_iter=5000)
     model = LR.fit(x_train, y_train.values.ravel())
-    # print(model.best_params_)
-    # print(model.best_estimator_)
+
     return model, vec
 
