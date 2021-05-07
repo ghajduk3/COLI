@@ -26,7 +26,8 @@ python -m spacy download en_core_web_sm
 ```
 
 <a name="usage"></a>
-###Usage
+### Usage
+
 The project is structured to implement multiple classifiers for two classification tasks, a binary and multiclass.
 In order to reproduce results from the report a `CLI` application has been implemented.  Following instructions assume that the user is in project's root.
 
