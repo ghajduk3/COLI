@@ -37,9 +37,9 @@ def setup_classifier(x_train:pd.DataFrame,y_train: pd.DataFrame ,features="prepr
     """
 
     if method == "count":
-        vec, x_train = combine_features(features, x_train,method=method, ngramrange=ngrams)
+        vec, x_train, topic_model_dict = combine_features(features, x_train,method=method, ngramrange=ngrams)
     elif method == "tfidf":
-        vec, x_train = combine_features(features, x_train,method=method,ngramrange=ngrams)
+        vec, x_train, topic_model_dict = combine_features(features, x_train,method=method,ngramrange=ngrams)
     else:
         print("Method has to be either count or tfidf")
         return 1
@@ -50,4 +50,4 @@ def setup_classifier(x_train:pd.DataFrame,y_train: pd.DataFrame ,features="prepr
     # print(model.best_params_)
     # print(model.best_estimator_)
 
-    return model, vec
+    return model, vec, topic_model_dict

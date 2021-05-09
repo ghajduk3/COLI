@@ -117,6 +117,7 @@ def generate_data_exploration_report(balanced: List[pd.DataFrame], imbalanced: L
                          List of imputbalanced input train data sets.
 
      """
-    data_word_counts(imbalanced)
+    pass
+    # data_word_counts(imbalanced)
     # label_counts = data_label_counts(balanced,imbalanced)
     # write_to_file_pd(label_counts,'./data/reports/label_value_counts.csv')
