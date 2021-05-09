@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
-from .create_features import create_features_tfidf
+from .create_features import create_features_tfidf, combine_features
 from .create_features import create_features_vectorizer
 from imblearn.over_sampling import RandomOverSampler,SMOTE
 
@@ -37,13 +37,13 @@ def setup_classifier(x_train: pd.DataFrame, y_train: pd.DataFrame, features="pre
     """
 
     if method == "count":
-        vec, x_train = create_features_vectorizer(features, x_train, ngramrange=ngrams)
+        vec, topic_model_dict, x_train = combine_features(features, x_train,method='count',ngramrange=ngrams)
     elif method == "tfidf":
-        vec, x_train = create_features_tfidf(features, x_train, ngramrange=ngrams)
+        vec, topic_model_dict, x_train = combine_features(features, x_train,method='tfidf',ngramrange=ngrams)
     else:
         print("Method has to be either count or tfidf")
         return 1
-
+    print(x_train)
     LRparam_grid = {
         'C': [0.001, 0.01, 0.1, 1, 10, 100],
         'penalty': ['l2'],
@@ -53,7 +53,6 @@ def setup_classifier(x_train: pd.DataFrame, y_train: pd.DataFrame, features="pre
     # LR = GridSearchCV(LogisticRegression(class_weight='balanced'), param_grid=LRparam_grid, refit=True, verbose=3)
     LR = LogisticRegression(solver='lbfgs',class_weight='balanced',max_iter=5000)
     model = LR.fit(x_train, y_train.values.ravel())
-    # print(model.best_params_)
-    # print(model.best_estimator_)
-    return model, vec
+
+    return model, vec, topic_model_dict
 
