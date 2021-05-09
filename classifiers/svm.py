@@ -3,7 +3,7 @@ from sklearn.model_selection import GridSearchCV
 import pandas as pd
 
 from .create_features import create_features_vectorizer
-from .create_features import create_features_tfidf
+from .create_features import create_features_tfidf, combine_features
 
 
 def setup_classifier(x_train:pd.DataFrame,y_train: pd.DataFrame ,features="preprocessed",method="count",ngrams=(1, 1)):
@@ -37,9 +37,9 @@ def setup_classifier(x_train:pd.DataFrame,y_train: pd.DataFrame ,features="prepr
     """
 
     if method == "count":
-        vec, x_train = create_features_vectorizer(features, x_train, ngramrange=ngrams)
+        vec, x_train = combine_features(features, x_train,method=method, ngramrange=ngrams)
     elif method == "tfidf":
-        vec, x_train = create_features_tfidf(features, x_train, ngramrange=ngrams)
+        vec, x_train = combine_features(features, x_train,method=method,ngramrange=ngrams)
     else:
         print("Method has to be either count or tfidf")
         return 1
