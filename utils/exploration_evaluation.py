@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.metrics import classification_report, accuracy_score, f1_score
 from sklearn.model_selection import StratifiedKFold
 from typing import List,AnyStr
+from classifiers import create_features
 from .classifier_manage import choose_and_create_classifier
 from .dataset_balancer import balance_dataset
 from .utilities import write_to_file_pd
@@ -62,8 +63,9 @@ def generate_evaluation_report_cv(classifier,vectorizer,x_data,y_data,features='
         y_train, y_test = y_data.iloc[train_index].to_frame(), y_data.iloc[test_index].to_frame()
         # Balances training data
         # X_train,y_train = balance_dataset(X_train,y_train,method='OVER')
-        model, vector = choose_and_create_classifier(classifier, X_train, y_train, vectorizer)
-        X_test = vector.transform(X_test[features].values)
+        model, vector, topic_model_dict = choose_and_create_classifier(classifier, X_train, y_train, vectorizer)
+        # X_test = vector.transform(X_test[features].values)
+        X_test = create_features.combine_features_test(X_test,vector,topic_model_dict)
         y_pred = model.predict(X_test)
         f1.append(f1_score(y_test,y_pred,average='weighted'))
         acc.append(accuracy_score(y_test,y_pred))
