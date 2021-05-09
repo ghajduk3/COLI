@@ -4,7 +4,7 @@ import pandas as pd
 import os,rootpath
 from datetime import date
 from typing import AnyStr,Tuple
-def choose_and_create_classifier(classifier: AnyStr, X_train: pd.DataFrame, y_train:pd.DataFrame, vectorizer:AnyStr,n_grams=(1,1))->Tuple[object,object]:
+def choose_and_create_classifier(classifier: AnyStr, X_train: pd.DataFrame, y_train:pd.DataFrame, vectorizer:AnyStr,n_grams=(1,1)):
     """
     Creates classifier for the given input training data and parameters.
     Arguments
@@ -35,17 +35,16 @@ def choose_and_create_classifier(classifier: AnyStr, X_train: pd.DataFrame, y_tr
                     	CountVectorizer or TfidfVectorizer fit and transformed for training data
 
     """
-    print(classifier)
-    if classifier == 'LOGISTIC REGRESSION':
-        model,vectorizer = logistic_regression.setup_classifier(X_train,y_train,features='preprocessed',method=vectorizer,ngrams=n_grams)
+    if classifier == 'LR':
+        model,vectorizer,topic_model_dict = logistic_regression.setup_classifier(X_train,y_train,features='preprocessed',method=vectorizer,ngrams=n_grams)
     elif classifier == 'SVM':
-        model, vectorizer = svm.setup_classifier(X_train, y_train, features='preprocessed',method=vectorizer, ngrams=n_grams)
+        model, vectorizer, topic_model_dict = svm.setup_classifier(X_train, y_train, features='preprocessed',method=vectorizer, ngrams=n_grams)
     elif classifier == 'XGB':
-        model, vectorizer = xg_boost.setup_classifier(X_train, y_train, features='preprocessed', method=vectorizer,ngrams=n_grams)
+        model, vectorizer, topic_model_dict = xg_boost.setup_classifier(X_train, y_train, features='preprocessed', method=vectorizer,ngrams=n_grams)
 
 
 
-    return model,vectorizer
+    return model,vectorizer,topic_model_dict
 
 
 def save_classifier(model,name,vec):
