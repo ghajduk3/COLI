@@ -113,9 +113,6 @@ venv.bak/
 # Spyder project settings
 .spyderproject
 .spyproject
-data/source_data/eng/multiclass/dataset_6/*
-data/structured_data/eng/multiclass/dataset_6/data.csv
-data/final_data/eng/multiclass/data.csv
 # Rope project settings
 .ropeproject
 
@@ -134,13 +131,46 @@ dmypy.json
 # CroSloEngual BERT model
 classifiers/bert/CroSloEngual/pytorch_model.bin
 
-# dataset 6
-data/source_data/eng/multiclass/dataset_6/tweets_dataset
-data/structured_data/dataset_6/data.csv
-data/final_data/eng/multiclass/data.csv
-
 # pytorch models
 models/*.pt
 models/*.pth
 models/bert/*.pt
 models/bert/*.pth
+
+# data
+data/source_data/eng/binary/dataset_1/data.csv
+
+data/source_data/eng/binary/dataset_2/data.csv
+
+data/source_data/eng/binary/dataset_3/data.csv
+
+data/source_data/eng/binary/dataset_4/annotations_metadata.csv
+data/source_data/eng/binary/dataset_4/all_files/
+data/source_data/eng/binary/dataset_4/sampled_test/
+
+data/source_data/eng/multiclass/dataset_5/downloaded_tweets_dataset/
+data/source_data/eng/multiclass/dataset_5/tweet_ids_dataset/
+data/source_data/eng/multiclass/dataset_5/hate_keywords.csv
+
+data/source_data/eng/multiclass/dataset_6/hate_keywords.csv
+data/source_data/eng/multiclass/dataset_6/tweets_dataset/
+
+data/source_data/slo/multiclass/dataset_2/data.csv
+
+
+data/structured_data/eng/binary/dataset_1/data.csv
+data/structured_data/eng/binary/dataset_2/data.csv
+data/structured_data/eng/binary/dataset_3/data.csv
+data/structured_data/eng/binary/dataset_4/data.csv
+data/structured_data/eng/multiclass/dataset_5/data.csv
+data/structured_data/eng/multiclass/dataset_6/data.csv
+
+data/structured_data/slo/multiclass/dataset_1/data.csv
+data/structured_data/slo/multiclass/dataset_2/data.csv
+
+
+data/final_data/eng/binary/data.csv
+data/final_data/eng/multiclass/data.csv
+
+data/final_data/slo/binary/data.csv
+data/final_data/slo/multiclass/data.csv
