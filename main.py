@@ -12,6 +12,7 @@ from classifiers import bert
 
 def process_args():
     parser = argparse.ArgumentParser(description="Cross-lingual offensive language classifier project by Simon Dimc and Gojko Hajduković.")
+    parser.add_argument('-pd', '--prepareData', required=True, default='false', type=str, help="Prepare data. Can be done just once at the beginning.")
     parser.add_argument('-t', '--type', required=True, default='bi', type=str, help="Specifies type of classification task to be performed. It is either binary task - bi or multiclass task - multi, the default one is binary - bi. ")
     parser.add_argument('-m', '--model', required=True, default='LR', type=str, help="Specifies the model that is used for classification. Available models are : BERT, LR, SVM, XGBOOST. LR, SVM and XGBOOST perform training and evaluation in-place for the english data defined. BERT model uses pre-trained model for classification trained on english data and performs evaluation on English and Slovene data.")
     return parser.parse_args()
@@ -19,24 +20,27 @@ def process_args():
 
 def validate_args():
     args = process_args()
+    prepareData = args.prepareData
     type = args.type
     model = args.model
     if not validation.validate_type_argument(type):
         raise SystemExit("Type argument is invalid! Valid types are bi or multi.")
     if not validation.validate_model_argument(model):
         raise SystemExit("Model argument is invalid! Valid models are BERT, LR, SVM, XGBOOST.")
-    return type, model
+    if not validation.validate_prepareData_argument(prepareData):
+        raise SystemExit("PrepareData argument is invalid! Valid models are true, false.")
+    return prepareData, type, model
 
 
 def main():
-    type, model= validate_args()
+    prepareData, type, model= validate_args()
 
+    if prepareData == 'true':
+        pipeline.prepare_labeled_datasets("eng")
+        pipeline.prepare_labeled_datasets("slo")
 
-    pipeline.prepare_labeled_datasets("eng")
-    pipeline.prepare_labeled_datasets("slo")
-
-    pipeline.create_final_datasets("eng")
-    pipeline.create_final_datasets("slo")
+        pipeline.create_final_datasets("eng")
+        pipeline.create_final_datasets("slo")
 
     if type == 'bi':
         ds_eng = pipeline.load_binary_datasets("eng")

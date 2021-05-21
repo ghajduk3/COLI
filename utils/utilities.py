@@ -2,6 +2,7 @@ import os, csv
 import logging,re
 import rootpath, pandas as pd
 from typing import AnyStr, Tuple, List
+from sklearn import metrics
 
 logger = logging.getLogger(__name__)
 
@@ -179,19 +180,8 @@ def print_performance_metrics(predicted, true):
     print(("{:>3}"+" | "+"{:>6.2f}"*len(labels)+" | ").format(" ", *[round_to_percentages(sum([matrix[(t, p)] for t in labels])) for p in labels]))
     
     print()
-    print("{:<35}:{:>8.4f}".format("Majority Class", round(majority_class(true), 4)))
-    print("{:<35}:{:>8.4f}".format("Accuracy", round(avg_accuracy(predicted, true), 4)))
-    print()
+    
+    y_true = np.array(true)
+    y_pred = np.array(predicted)
 
-    if len(labels) == 2:
-        sensitivity = matrix[(labels[0], labels[0])] / (matrix[(labels[0], labels[0])] + matrix[(labels[0], labels[1])])
-        specificity = matrix[(labels[1], labels[1])] / (matrix[(labels[1], labels[1])] + matrix[(labels[1], labels[0])])
-        positive_predictive = matrix[(labels[0], labels[0])] / (matrix[(labels[0], labels[0])] + matrix[(labels[1], labels[0])])
-        negative_predictive = matrix[(labels[1], labels[1])] / (matrix[(labels[1], labels[1])] + matrix[(labels[0], labels[1])])
-        f1_score = 2 * ((positive_predictive * sensitivity) / (positive_predictive + sensitivity))
-
-        print("{:<35}:{:>8.4f}".format("Sensitivity, Recall", round(sensitivity, 4)))
-        print("{:<35}:{:>8.4f}".format("Specificity", round(specificity, 4)))
-        print("{:<35}:{:>8.4f}".format("Positive Predictive, Precision", round(positive_predictive, 4)))
-        print("{:<35}:{:>8.4f}".format("Negative Predictive", round(negative_predictive, 4)))
-        print("{:<35}:{:>8.4f}".format("F1 Score", round(f1_score, 4)))
+    print(metrics.classification_report(y_true, y_pred))

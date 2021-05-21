@@ -11,6 +11,7 @@ imbalanced-learn
 transformers
 classla
 argparse
+gensim
 
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.8.1+cu111

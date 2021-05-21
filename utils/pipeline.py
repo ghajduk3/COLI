@@ -11,6 +11,8 @@ from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
 from preprocess.combinator import read_combine_datasets, normalize_eng_dataset_5, normalize_eng_dataset_6, normalize_slo_dataset_2
 from classifiers import bert, create_features
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 
 
 def prepare_labeled_datasets(lang = 'eng'):
@@ -80,7 +82,7 @@ def load_binary_datasets(lang='eng')-> pd.DataFrame:
     input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'binary', 'data.csv')
     try:
         df = pd.read_csv(input_base_path)
-    except pd.errors.EmptyDataError:
+    except (pd.errors.EmptyDataError, FileNotFoundError) as e:
         df = pd.DataFrame()
     return df
 
@@ -88,7 +90,7 @@ def load_multiclass_datasets(lang='eng')-> pd.DataFrame:
     input_base_path = os.path.join(rootpath.detect(), 'data', 'final_data', lang, 'multiclass', 'data.csv')
     try:
         df = pd.read_csv(input_base_path)
-    except pd.errors.EmptyDataError:
+    except (pd.errors.EmptyDataError, FileNotFoundError) as e:
         df = pd.DataFrame()
     return df
 
@@ -101,8 +103,61 @@ def create_final_datasets(lang = "eng"):
 
     if not binary.empty:
         binary_non_hate = binary.loc[binary["Label"] == 0]
+        binary_hate = binary.loc[binary["Label"] == 1]
 
-        multiclass_full = pd.concat([multiclass, binary_non_hate], axis=0, ignore_index=True)
+        multiclass_dataset_5_keywords = pd.read_csv(os.path.join(rootpath.detect(), 'data', 'source_data', 'eng', 'multiclass', 'dataset_5', 'hate_keywords.csv'))
+        multiclass_dataset_6_keywords = pd.read_csv(os.path.join(rootpath.detect(), 'data', 'source_data', 'eng', 'multiclass', 'dataset_6', 'hate_keywords.csv'))
+
+        ds_5_keywords_map = {
+            'archaic': 5,
+            'class': 3,
+            'disability': 3,
+            'ethn': 1,
+            'gender': 2,
+            'nation': 1,
+            'rel': 5,
+            'sexorient': 2
+        }
+
+        ds_6_keywords_map = {
+            'sexual': 2,
+            'racial': 1,
+            'appearance': 4,
+            'intelligence': 3,
+            'politics': 5,
+            'generic': 5
+        }
+
+        keywords = pd.DataFrame(columns=['Keyword','Label'])
+
+        lemmer = WordNetLemmatizer()
+
+        for i in multiclass_dataset_5_keywords.index:
+            keyword = multiclass_dataset_5_keywords['Keyword'][i]
+            keyword = lemmer.lemmatize(keyword)
+            classs = multiclass_dataset_5_keywords['Class'][i]
+            keywords = keywords.append(pd.DataFrame({"Keyword": [keyword], "Label": [ds_5_keywords_map[classs]]}), ignore_index = True)
+        
+        for i in multiclass_dataset_6_keywords.index:
+            keyword = multiclass_dataset_6_keywords['Keyword'][i]
+            keyword = lemmer.lemmatize(keyword)
+            classs = multiclass_dataset_6_keywords['Class'][i]
+            keywords = keywords.append(pd.DataFrame({"Keyword": [keyword], "Label": [ds_6_keywords_map[classs]]}), ignore_index = True)
+        
+        new_hate_from_binary_hate = pd.DataFrame(columns=['Text','Label'])
+
+        for i in binary_hate.index:
+            text = binary_hate['Text'][i]
+            words = word_tokenize(text)
+            words = [lemmer.lemmatize(word) for word in words]
+            for j in keywords.index:
+                keyword = keywords['Keyword'][j]
+                label = keywords['Label'][j]
+
+                if keyword in words:
+                    new_hate_from_binary_hate = new_hate_from_binary_hate.append(pd.DataFrame({"Text": [text], "Label": [label]}), ignore_index = True)
+
+        multiclass_full = pd.concat([multiclass, binary_non_hate, new_hate_from_binary_hate], axis=0, ignore_index=True)
 
         multiclass_full.dropna(inplace=True)
         multiclass_full.drop_duplicates(subset=['Text', 'Label'], keep='first',inplace=True)
@@ -310,19 +365,22 @@ def explore():
 def run_bert_experiment(x_english,y_english,x_slovene,y_slovene,type='bi'):
     model = bert.setup_classifier(
         model_name="classifiers/bert/CroSloEngual",
-        num_labels=2
+        num_labels= 2 if type == 'bi' else 6
     )
 
+    model_name = 'binary.pt' if type == 'bi' else 'multiclass.pt'
+
+    model_state_dict, _, _, _ = bert.load_checkpoint("models/bert/" + model_name)
+    model.load_state_dict(model_state_dict)
+
+    """
     dataset = bert.setup_data(
         model_name = "classifiers/bert/CroSloEngual",
         x = x_english,
         y = y_english,
         do_lower_case = False,
-        max_length = 180
+        max_length = 512
     )
-    model_name = 'binary.pt' if type == 'bi' else 'multiclass.pt'
-
-    model.load_state_dict(bert.load_model("models/bert/" + model_name))
 
     predictions, true_labels = bert.test_classifier(
         model = model,
@@ -330,17 +388,18 @@ def run_bert_experiment(x_english,y_english,x_slovene,y_slovene,type='bi'):
         batch_size = 32
     )
     utils.utilities.print_performance_metrics(predictions, true_labels)
+    """
 
     dataset_slovene = bert.setup_data(
         model_name = "classifiers/bert/CroSloEngual",
         x = x_slovene,
         y = y_slovene,
         do_lower_case = False,
-        max_length = 180
+        max_length = 512
     )
     predictions_slov, true_labels_slov = bert.test_classifier(
         model = model,
-        dataset = dataset,
+        dataset = dataset_slovene,
         batch_size = 32
     )
     utils.utilities.print_performance_metrics(predictions_slov, true_labels_slov)

@@ -6,6 +6,12 @@ from nltk.stem import PorterStemmer,SnowballStemmer, WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
+
+classla.download('sl')
+
 nlp_eng = spacy.load("en_core_web_sm", disable=['tagger', 'parser', 'ner'])
 eng_stopwords = set(nlp_eng.Defaults.stop_words)
 slo_stopwords = set(stopwords.words('slovene'))

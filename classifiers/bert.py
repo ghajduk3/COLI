@@ -100,8 +100,7 @@ def train_classifier(
 
     optimizer = AdamW(
         filter(lambda p: p.requires_grad, model.parameters()),
-        lr = 2e-5,
-        eps = 1e-8
+        lr = 5e-5
     )
 
     total_steps = len(train_dataloader) * epochs

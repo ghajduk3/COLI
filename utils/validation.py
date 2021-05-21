@@ -8,3 +8,6 @@ def validate_model_argument(model:str) -> bool:
     models = ('SVM', 'LR', 'XGBOOST', 'BERT')
     return True if model in models else False
 
+def validate_prepareData_argument(prepareData:str) -> bool:
+    return True if prepareData == 'true' or prepareData == 'false' else False
+

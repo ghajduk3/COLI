@@ -150,9 +150,9 @@ data/source_data/eng/binary/dataset_4/sampled_test/
 
 data/source_data/eng/multiclass/dataset_5/downloaded_tweets_dataset/
 data/source_data/eng/multiclass/dataset_5/tweet_ids_dataset/
-data/source_data/eng/multiclass/dataset_5/hate_keywords.csv
+# data/source_data/eng/multiclass/dataset_5/hate_keywords.csv
 
-data/source_data/eng/multiclass/dataset_6/hate_keywords.csv
+# data/source_data/eng/multiclass/dataset_6/hate_keywords.csv
 data/source_data/eng/multiclass/dataset_6/tweets_dataset/
 
 data/source_data/slo/multiclass/dataset_2/data.csv
