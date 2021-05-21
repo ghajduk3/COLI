@@ -53,7 +53,15 @@ Datasets are in folder data/source_data. Get datasets from following sources and
     - data/source_data/slo/multiclass/dataset_2  
     source: https://www.clarin.si/repository/xmlui/handle/11356/1398  
     You will have to either download the tweets using the provided Tweet IDs or contact the authors. You will have to parse the data into a data.csv file with format: Text,Class,Type.
-    
+
+4. Get models:
+
+    - CroSloEngual BERT pre-trained model  
+    source: https://www.clarin.si/repository/xmlui/handle/11356/1330  
+    Put config.json, pytorch_model.bin, and vocab.txt inside classifiers/bert/CroSloEngual.
+    - Fine-tuned CroSloEngual BERT models  
+    source: https://drive.google.com/drive/folders/1j2BJ-X0WdNpxDFJHrmm-DsYuy1GeFb03?usp=sharing  
+    Put bert/binary.pt and bert/multiclass.pt inside models/bert.
 
 <a name="usage"></a>
 ### Usage
