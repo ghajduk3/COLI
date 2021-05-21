@@ -30,7 +30,7 @@ def create_features_topic_modelling(data,num_topics=10):
     dictionary = gensim.corpora.Dictionary(data['corpus'].to_list())
     data['corpus'] = data['corpus'].apply(lambda x: dictionary.doc2bow(x))
 
-    ldamodel = gensim.models.ldamodel.LdaModel(data['corpus'].to_list(), num_topics=num_topics, id2word=dictionary, passes=15)
+    ldamodel = gensim.models.ldamodel.LdaModel(data['corpus'].to_list(), num_topics=num_topics, id2word=dictionary, passes=5)
     # gensim.models.ldamodel.LdaModel.load()
     # ldamodel.save('model5.gensim')
     data['topics'] = data['corpus'].apply(lambda x: max(ldamodel.get_document_topics(x), key=lambda x: x[1])[0])

@@ -43,7 +43,6 @@ def setup_classifier(x_train: pd.DataFrame, y_train: pd.DataFrame, features="pre
     else:
         print("Method has to be either count or tfidf")
         return 1
-    print(x_train)
     LRparam_grid = {
         'C': [0.001, 0.01, 0.1, 1, 10, 100],
         'penalty': ['l2'],

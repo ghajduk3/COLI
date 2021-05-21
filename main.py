@@ -44,18 +44,20 @@ def main():
 
     if type == 'bi':
         ds_eng = pipeline.load_binary_datasets("eng")
-        x_eng,y_eng =  pipeline.run_dataset_preparation(ds_eng, "eng", remove_stopwords=True, do_lemmatization=True)
         ds_slov = pipeline.load_binary_datasets("slo")
-        x_slov, y_slov = pipeline.run_dataset_preparation(ds_slov, "slo", remove_stopwords=True, do_lemmatization=True)
     else:
         ds_eng = pipeline.load_multiclass_datasets("eng")
-        x_eng,y_eng =  pipeline.run_dataset_preparation(ds_eng, "eng", remove_stopwords=True, do_lemmatization=True)
         ds_slov = pipeline.load_multiclass_datasets("slo")
-        x_slov, y_slov = pipeline.run_dataset_preparation(ds_slov, "slo", remove_stopwords=True, do_lemmatization=True)
 
     if model == 'BERT':
+        x_eng,y_eng =  pipeline.run_dataset_preparation(ds_eng, "eng", remove_stopwords=False, do_lemmatization=False)
+        x_slov, y_slov = pipeline.run_dataset_preparation(ds_slov, "slo", remove_stopwords=False, do_lemmatization=False)
+
         pipeline.run_bert_experiment(x_eng, y_eng, x_slov, y_slov, type)
     else:
+        x_eng,y_eng =  pipeline.run_dataset_preparation(ds_eng, "eng", remove_stopwords=True, do_lemmatization=True)
+        x_slov, y_slov = pipeline.run_dataset_preparation(ds_slov, "slo", remove_stopwords=True, do_lemmatization=True)
+
         pipeline.evaluate_cross_validation(model, 'tfidf', x_eng, y_eng)
 
 

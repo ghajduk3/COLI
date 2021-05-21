@@ -373,7 +373,6 @@ def run_bert_experiment(x_english,y_english,x_slovene,y_slovene,type='bi'):
     model_state_dict, _, _, _ = bert.load_checkpoint("models/bert/" + model_name)
     model.load_state_dict(model_state_dict)
 
-    """
     dataset = bert.setup_data(
         model_name = "classifiers/bert/CroSloEngual",
         x = x_english,
@@ -388,7 +387,6 @@ def run_bert_experiment(x_english,y_english,x_slovene,y_slovene,type='bi'):
         batch_size = 32
     )
     utils.utilities.print_performance_metrics(predictions, true_labels)
-    """
 
     dataset_slovene = bert.setup_data(
         model_name = "classifiers/bert/CroSloEngual",

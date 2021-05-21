@@ -6,6 +6,7 @@ from classifiers import create_features
 from .classifier_manage import choose_and_create_classifier
 from .dataset_balancer import balance_dataset
 from .utilities import write_to_file_pd
+from .utilities import print_performance_metrics
 
 
 def generate_evaluation_report(y_true:pd.DataFrame,y_pred:pd.DataFrame,target_names:List[AnyStr]):
@@ -58,6 +59,10 @@ def generate_evaluation_report_cv(classifier,vectorizer,x_data,y_data,features='
     f1 = []
     acc = []
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+    trues = []
+    preds = []
+
     for train_index, test_index in skf.split(x_data, y_data):
         X_train, X_test = x_data.iloc[train_index].to_frame(), x_data.iloc[test_index].to_frame()
         y_train, y_test = y_data.iloc[train_index].to_frame(), y_data.iloc[test_index].to_frame()
@@ -67,11 +72,15 @@ def generate_evaluation_report_cv(classifier,vectorizer,x_data,y_data,features='
         # X_test = vector.transform(X_test[features].values)
         X_test = create_features.combine_features_test(X_test,vector,topic_model_dict)
         y_pred = model.predict(X_test)
-        f1.append(f1_score(y_test,y_pred,average='weighted'))
-        acc.append(accuracy_score(y_test,y_pred))
-    print("{:<35}:{:>8.4f}".format("Weighted f1", round(sum(f1)/len(f1), 4)))
-    print("{:<35}:{:>8.4f}".format("Accuracy", round(sum(acc)/len(acc), 4)))
-    return sum(f1)/len(f1),sum(acc)/len(acc)
+        trues.extend(y_test['Label'].tolist())
+        preds.extend(y_pred.tolist())
+        #f1.append(f1_score(y_test,y_pred,average='weighted'))
+        #acc.append(accuracy_score(y_test,y_pred))
+    #print("{:<35}:{:>8.4f}".format("Weighted f1", round(sum(f1)/len(f1), 4)))
+    #print("{:<35}:{:>8.4f}".format("Accuracy", round(sum(acc)/len(acc), 4)))
+    #return sum(f1)/len(f1),sum(acc)/len(acc)
+    print_performance_metrics(preds, trues)
+    return None
 
 def data_label_counts(balanced,imbalanced):
     """

@@ -37,15 +37,15 @@ def setup_classifier(x_train:pd.DataFrame,y_train: pd.DataFrame ,features="prepr
     """
 
     if method == "count":
-        vec, x_train, topic_model_dict = combine_features(features, x_train,method=method, ngramrange=ngrams)
+        vec, topic_model_dict, x_train = combine_features(features, x_train, method='count', ngramrange=ngrams)
     elif method == "tfidf":
-        vec, x_train, topic_model_dict = combine_features(features, x_train,method=method,ngramrange=ngrams)
+        vec, topic_model_dict, x_train = combine_features(features, x_train, method='tfidf', ngramrange=ngrams)
     else:
         print("Method has to be either count or tfidf")
         return 1
     param_grid = {'C': [0.1, 1, 10, 100], 'gamma': [1, 0.1, 0.01, 0.001], 'kernel': ['rbf', 'poly', 'sigmoid']}
     # SVM= GridSearchCV(svm.SVC(), param_grid, refit=True, verbose=2,cv=2)
-    SVM = svm.SVC(class_weight='balanced')
+    SVM = svm.LinearSVC(class_weight='balanced')
     model = SVM.fit(x_train, y_train.values.ravel())
     # print(model.best_params_)
     # print(model.best_estimator_)

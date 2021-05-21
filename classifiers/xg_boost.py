@@ -37,9 +37,9 @@ def setup_classifier(x_train, y_train,features="preprocessed", method="count", n
     """
 
     if method == "count":
-        vec, x_train, topic_model_dict = combine_features(features, x_train, method=method, ngramrange=ngrams)
+        vec, topic_model_dict, x_train = combine_features(features, x_train, method='count', ngramrange=ngrams)
     elif method == "tfidf":
-        vec, x_train, topic_model_dict = combine_features(features, x_train, method=method, ngramrange=ngrams)
+        vec, topic_model_dict, x_train = combine_features(features, x_train, method='tfidf', ngramrange=ngrams)
     else:
         print("Method has to be either count or tfidf")
         return 1

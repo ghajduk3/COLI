@@ -1,6 +1,7 @@
 import spacy
 import re
 import classla
+import nltk
 
 from nltk.stem import PorterStemmer,SnowballStemmer, WordNetLemmatizer
 from nltk.tokenize import word_tokenize

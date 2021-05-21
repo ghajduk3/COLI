@@ -3,6 +3,7 @@ import logging,re
 import rootpath, pandas as pd
 from typing import AnyStr, Tuple, List
 from sklearn import metrics
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
