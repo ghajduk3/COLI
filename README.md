@@ -72,7 +72,7 @@ python main.py --prepareData true --type multi --model LR
 python main.py -pd false -t bi -m BERT
 ```
 
-3. For BERT training you can use the notebooks/bert-notebook.ipynb notebook for Google Colab.
+3. For BERT fine-tuning you can use the notebooks/bert-notebook.ipynb notebook for Google Colab.
 
 
 
